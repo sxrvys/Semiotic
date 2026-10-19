@@ -14,6 +14,8 @@ This repository hosts beta installers, release notes, and user documentation. Ap
 
 ### 0.5.1 — October 19, 2026
 
+- **Playback hotfix (build 20261019.185837):** active sequencer clips prepare while paused and stay ahead of unrelated pads in the bounded decoder cache. Fixes repeated preparation/skipped hits in larger sets without increasing the memory limit.
+
 - Mask lanes and mask steps now have opacity controls. 100% applies the full matte; 0% leaves the target unmasked. Lane and step amounts multiply and persist through recording, placement, and export. Timeline mask clips expose the same control. The step inspector’s Timing tab is now **General**, with opacity/blend at the top.
 
 - Click a sequencer **lane card** for lane-wide mute, routing, opacity/blend and **Apply to all** gate length. Click a step for its own controls: **General → Step opacity / Step blend**. Step opacity multiplies lane/layer opacity; step blends inherit unless explicitly overridden. Lane mix changes take effect on the next clip trigger and are preserved by Record, Place Pattern and export.
