@@ -12,13 +12,39 @@ This repository hosts beta installers, release notes, and user documentation. Ap
 
 ## Changelog
 
+### 0.5.1 — October 19, 2026
+
+- Mask lanes and mask steps now have opacity controls. 100% applies the full matte; 0% leaves the target unmasked. Lane and step amounts multiply and persist through recording, placement, and export. Timeline mask clips expose the same control. The step inspector’s Timing tab is now **General**, with opacity/blend at the top.
+
+- Click a sequencer **lane card** for lane-wide mute, routing, opacity/blend and **Apply to all** gate length. Click a step for its own controls: **General → Step opacity / Step blend**. Step opacity multiplies lane/layer opacity; step blends inherit unless explicitly overridden. Lane mix changes take effect on the next clip trigger and are preserved by Record, Place Pattern and export.
+- Fixed Gate numeric entry showing a stale value after Return or clicking away. **Apply** buttons also commit a number that is still being typed, without requiring Return first. Native inspector tests check the displayed value as well as the stored value.
+
+- Numeric fields allow normal clearing/replacement, negative and decimal entry, selection and clipboard editing. Return or clicking away applies the value once; Escape cancels, and incomplete/invalid entries restore the previous value. This covers sequencer Gate/layout duration, FX, grading, crop/transform, tempo, trims, masks and automation coordinates.
+- While typing, ⌘Z / ⇧⌘Z use the text editor’s undo/redo history instead of changing the project. Trim panels with an **Apply** button still use that button to apply the prepared trim.
+- Clip text uses a compact nine-font chooser, including bundled **VCR OSD Mono**. **More Fonts…** loads installed fonts only when opened; custom fonts already saved in projects remain selectable. Selecting clips no longer builds the entire system-font catalog in the inspector.
+- Source audition avoids rebuilding an unchanged video composition and publishing unchanged playback state.
+
+- Sequencer length is now **Bars × Subdivision** in the main toolbar, with the resulting step count displayed. All lanes is the default; choose Selected lane for independent lengths. Two bars at 1/16 is 32 steps; eighth-note triplets give 12 steps per bar. Each lane supports up to 64 steps. New steps default to a one-step gate; existing patterns keep their gates.
+- Temporary split-screen commands: select a clip-lane step → **General → Screen Layout…** to open the Clip inspector. Enable Timed screen layout, choose Top/Bottom/Left/Right/corners, and set its duration in steps independently of the clip gate. For a six-step split, set Clips A to Top and Clips B to Bottom for six steps. Commands survive intervening clip changes, restore the previous layout when finished, and are retained in Record/Place Pattern and export.
+- Step inspector labeling and retrigger guidance make Gate, Hits and their frame-rate limits clearer. Project format 18 stores timed layout commands; older projects still open.
+
+- Drop Finder folders into Project Media to import their audio/video into same-named project folders. Subfolder media is included in the root folder’s bin, non-media files are skipped, existing source trims are preserved, and one Undo removes the whole import. Source files stay in their original locations.
+
+- Enter now works in the Sequencer as it does in the Timeline: press once to stop, then again to return the song and sequencer clock to zero and scroll the view to the beginning. Space toggles playback in either view; typing in parameter fields keeps normal keyboard behavior.
+
+- Selecting a sequencer step’s **FX** tab opens **Effects → Selected step** in the full inspector. The effect’s parameter sliders and numeric fields write step locks automatically; blue lock buttons clear individual overrides. Gate/timing and the existing Lock parameter / Use for lane controls remain in the left step panel. Shared rack values and neighboring steps stay unchanged.
+- Sequencer Gate length spans 0.05–64 steps, with numeric entry and common lengths. Long clips sustain across empty/missed steps; new hits take over without old tails reappearing in placed patterns.
+- Switching from a playing timeline to Sequencer starts the pattern at the current song position while keeping soundtrack playback continuous. Patterns repeat while the song progresses; Record captures repeated passes, and Stop leaves the playhead at the end of the take for the next section.
+
+- **Settings → Audio → Playback output** selects any audio output exposed by macOS, independently of the live input. The app remembers the device, refreshes on connection changes, and mutes playback if a chosen device disconnects until it returns or another output is chosen. System Default follows macOS. Export and capture audio are unchanged.
+
 ### 0.5.0 beta — October 19, 2026
 
 - Unified Timeline / Sequencer workspace with independent Media, Pads, FX, Macros, and Automation visibility. Common project, export, and capture actions live in File; source/canvas setup lives in Settings.
 - Sequencer lanes in the main working area, with step controls in the left sidebar. Drag lane headers to reorder; layer routing and playback order stay intact. Pattern creation/duplication, chaining, Fill, Store/Mutate/Restore, probability, weighted clip choices, retriggers, and parameter locks support repeatable performances.
 - Contextual **Clip inspector** for timeline clips, media-source defaults, pads, and clip-lane steps. Add scale, position, rotation, flips, transparent edge cropping, and multiline text with installed fonts, color, alignment, wrapping, opacity, outline, and background.
 - Source defaults are copied into new placements. Individual clip/pad/step changes remain independent; sequencer capture and Place Pattern retain their appearance. Text can be placed before or after clip FX; global FX always process the composite.
-- Weighted clip choices now live in a collapsed **Timing → Random clip choices** section, leaving Timing, FX, and Lane as the main step tabs.
+- Weighted clip choices now live in a collapsed **General → Random clip choices** section, leaving General, FX, and Lane as the main step tabs.
 - Welcome-screen focus cleanup, visual-only undo for framing/text, and cached text rendering at preview/export resolution.
 - Project format 16 preserves the new appearance fields. Existing projects open; projects saved in this version require an updated app. Keep a copy if returning to an older beta.
 
@@ -106,9 +132,9 @@ Open **Pads** and **Macros** to play clips while keeping either the timeline or 
 - Layer **FX** opens its own rack. Global FX process the combined picture. MIDI Map can assign layer parameters, opacity, the crossfader, or scene recall without replacing existing SP-404 mappings.
 - **Scenes** saves named snapshots of clip assignments, both layers, the global rack and macros, and the selected pattern. Recall uses the Launch interval while playing; new pad hits use the recalled assignments. Recorded scene changes replay on the timeline and can be edited in Scenes → Recorded rack changes.
 - **Sequencer** opens the step lanes in the timeline area, keeping the preview visible. Start with two clip rows, a mask row, and an FX row; expand to eight independent rows with 1–64 steps each.
-- **Reorder sequencer lanes:** drag the entire lane header (the “Clips A / Drop a clip here” box) onto another header, or right-click it and choose **Move Up / Move Down**. The row’s clips, steps, masks and FX move together; its assigned layer and playback stay unchanged. Order is saved with the project and supports undo. Audio is arranged in **Timeline** and continues playing with the sequencer. Select a step to edit its **Timing / FX / Lane** controls in the left sidebar beneath Media and Pads.
+- **Reorder sequencer lanes:** drag the entire lane header (the “Clips A / Drop a clip here” box) onto another header, or right-click it and choose **Move Up / Move Down**. The row’s clips, steps, masks and FX move together; its assigned layer and playback stay unchanged. Order is saved with the project and supports undo. Audio is arranged in **Timeline** and continues playing with the sequencer. Select a step to edit its **General / FX / Lane** controls in the left sidebar beneath Media and Pads.
 - **Media** and **FX** in the top toolbar collapse independently. **Focus** above the working view hides both; **Restore panels** brings back the previous combination. The divider above the performance controls adjusts preview versus sequencer height.
-- Drag Project Media or a pad onto a lane to choose its source, or onto a step to assign a different clip. Click empty steps to add hits; select a lit step to edit it, then click it again to disable it. The left sidebar holds Timing, FX, and Lane controls. Weighted clip pools are available under **Timing → Random clip choices**.
+- Drag Project Media or a pad onto a lane to choose its source, or onto a step to assign a different clip. Click empty steps to add hits; select a lit step to edit it, then click it again to disable it. The left sidebar holds General, FX, and Lane controls. Weighted clip pools are available under **General → Random clip choices**.
 - Steps support weighted clip pools, probability, gate length, retriggers, frame-aligned microtiming, per-step source starts, first/every-N/previous-result conditions, and Fill. Mask and FX rows can run at different lengths from the clip rows.
 - FX steps can gate an effect or saved chain and lock individual parameters without retriggering the footage. Use **Use for lane** to give new steps the same default FX assignment.
 - Hold **Fill**, or enable **Latch**, for Fill-only steps. **Store → Mutate → Restore** offers a reversible way to try variations. These performance buttons can be assigned through MIDI Map without changing existing controller mappings.
