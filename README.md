@@ -14,6 +14,8 @@ This repository hosts beta installers, release notes, and user documentation. Ap
 
 ### 0.5.1 — October 19, 2026
 
+- **Multi-loop placement (build 20261019.193420):** choose **1–64 loops** beside Place Pattern. Each pass evaluates probability, weighted clip pools and conditional FX independently, then writes fixed, editable clips, masks and FX automation. Chained patterns use the same loop count. Set a step’s Chance to 100% for a guaranteed hit; Wet/Dry controls effect strength.
+
 - **Playback hotfix (build 20261019.185837):** active sequencer clips prepare while paused and stay ahead of unrelated pads in the bounded decoder cache. Fixes repeated preparation/skipped hits in larger sets without increasing the memory limit.
 
 - Mask lanes and mask steps now have opacity controls. 100% applies the full matte; 0% leaves the target unmasked. Lane and step amounts multiply and persist through recording, placement, and export. Timeline mask clips expose the same control. The step inspector’s Timing tab is now **General**, with opacity/blend at the top.
@@ -140,7 +142,7 @@ Open **Pads** and **Macros** to play clips while keeping either the timeline or 
 - Steps support weighted clip pools, probability, gate length, retriggers, frame-aligned microtiming, per-step source starts, first/every-N/previous-result conditions, and Fill. Mask and FX rows can run at different lengths from the clip rows.
 - FX steps can gate an effect or saved chain and lock individual parameters without retriggering the footage. Use **Use for lane** to give new steps the same default FX assignment.
 - Hold **Fill**, or enable **Latch**, for Fill-only steps. **Store → Mutate → Restore** offers a reversible way to try variations. These performance buttons can be assigned through MIDI Map without changing existing controller mappings.
-- **Place Pattern** generates a traversal using the saved seed/current Fill state. **Record** captures the actual live choices; stopping places editable clips, masks, and FX automation on the timeline. Probability never rerolls a recorded take during export.
+- **Place Pattern:** choose **1–64 loops** beside the button. Each pass evaluates clip probability, weighted pools and FX gates independently using the saved seed/current Fill state. Chained patterns use the same loop count. This writes resolved clips, masks and FX automation, rather than duplicating the first pass. At less than 100% Chance a step can legitimately be absent; set Chance to 100% for guaranteed hits (Wet/Dry still controls effect strength). **Record** captures the actual live choices; stopping places editable clips, masks, and FX automation on the timeline. Probability never rerolls a recorded take during export.
 - Open **Settings → Control Surfaces** to enable MIDI and select a detected input. The SP-404MKII setup provides clip triggering and performance controls; generic MIDI Learn supports other controllers.
 - Use **MIDI Map** in the top toolbar, click a highlighted software control, then move or press the hardware control you want to assign. Existing assignments are preserved unless explicitly changed. Settings retain the selected controller and saved mappings.
 
