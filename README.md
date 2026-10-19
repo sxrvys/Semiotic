@@ -16,7 +16,7 @@ This repository hosts beta installers, release notes, and user documentation. Ap
 - **macOS 14 Sonoma or later**, unless an individual release specifies a newer requirement.
 - Your own video and audio files. A MIDI controller is optional.
 
-No TouchDesigner, Max, Ableton, or additional codec package is required. BlackHole is optional for routing audio from another application into Semiotic's visual reactivity controls.
+No Terminal commands, Python, pip, Xcode, TouchDesigner, Max, Ableton, or additional codec package are required. The app includes its resources and uses the media and graphics frameworks supplied with macOS. BlackHole is optional for routing audio from another application into Semiotic's visual reactivity controls; ordinary editing, playback, export, MIDI, and soundtrack reactivity work without it.
 
 ## Install
 
