@@ -14,6 +14,8 @@ This repository hosts beta installers, release notes, and user documentation. Ap
 
 ### 0.5.1 — October 19, 2026
 
+- **Clip preparation (build 20261019.201106):** the Sequencer now has **Prepare Clips** and an **N/N ready** count beside Bars/Subdivision. Pause and wait for all choices to be ready before playing. Patterns retain up to 64 possible clip choices, including probability pools; only two prepare at once. This fixes repeated eviction/rebuilding in patterns exceeding the old 32-player cache. A file that cannot prepare times out with a reason and waits for an explicit retry instead of repeatedly competing with playback. Hover the readiness count for details; Prepare Clips retries unavailable sources. Masks prepare separately. High-resolution sources, complex FX, and active layer count still affect performance.
+
 - **Multi-loop placement (build 20261019.193420):** choose **1–64 loops** beside Place Pattern. Each pass evaluates probability, weighted clip pools and conditional FX independently, then writes fixed, editable clips, masks and FX automation. Chained patterns use the same loop count. Set a step’s Chance to 100% for a guaranteed hit; Wet/Dry controls effect strength.
 
 - **Playback hotfix (build 20261019.185837):** active sequencer clips prepare while paused and stay ahead of unrelated pads in the bounded decoder cache. Fixes repeated preparation/skipped hits in larger sets without increasing the memory limit.
