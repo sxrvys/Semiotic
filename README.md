@@ -6,15 +6,29 @@ Semiotic Studio is a native Mac application for experimental music videos, glitc
 
 Build precise edits, layer and distort footage, map visual parameters to music or MIDI, and record a pad performance back into an editable timeline. From restrained processing to harsh feedback and rhythmic noise, the emphasis is on making the picture something you can perform.
 
-**[Download beta builds](https://github.com/sxrvys/Semiotic/releases)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
+**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.5.1-beta.20261021.193442)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
 
 This repository hosts beta installers, release notes, and user documentation. Application source is maintained separately. Semiotic is under active development; save a copy of important projects before trying a new beta.
 
 ## Changelog
 
+### 0.5.1 beta — October 21, 2026 · build 20261021.193442
+
+- **Larger verse/chorus/bridge arrangements:** linked patterns share an advance-loading cache. Small chains keep all choices prepared; larger chains forecast weighted clip choices up to eight seconds ahead and rotate them through at most 64 prepared players, with two preparation jobs at a time. **64 is a cache limit, not a project-wide clip limit.** Pause and use **Prepare Clips**, then wait for the current window to read **N/N ready ahead**. The readiness panel explains which sources are ready, queued, on demand, or unavailable.
+- **Three live video layers:** A, B, and C have independent opacity, blending, FX, masks, and timeline recording. New clip lanes choose an unused target. The A/B crossfader leaves C independent; lanes targeting the same layer replace each other's clips.
+- **Faster editing and preparation:** background clip-readiness changes no longer redraw the entire editor during sequencing. Color palette processing runs on the GPU instead of rebuilding a 32³ lookup table while controls move. Preview/status updates stay isolated from the larger workspace.
+- **Random pools:** drop one or more media clips anywhere inside the expanded pool, including over existing entries, to add choices. The whole drop area highlights. Existing entries and their weights are retained.
+- **Group editing:** timeline masks support Shift-click and rectangle selection, moving, duplicate, copy/paste, batch settings, and Undo. Sequencer steps support batch edits, full-step copy/paste, and dragging steps between compatible lanes.
+- **Step control:** lane/step speed and reverse stay independent of gate length. Step FX expose audio/beat mapping and random parameter ranges; placed performances preserve their resolved choices and mappings.
+- **Media workflow:** thumbnails show usage, can filter unused sources, and help locate timeline/sequencer uses. Source controls expose marked ranges, crop/scale, and text. Audio drops retain the pointer's timeline position; the first pattern placed on an empty visual timeline begins at zero. Track headers remain accessible during horizontal scrolling.
+- **Clearer readiness:** the footer reports sequence readiness in Sequencer view instead of the unrelated controller-pad bank count. Failed sources retain their explanation and wait for Retry; preparation warnings refer to the current pattern chain.
+- **Compatibility:** projects saved by this build use project format 20. Older project formats remain readable; keep a backup before opening/saving in a newer beta. VCR OSD Mono is bundled; no separate font or developer-tool installation is needed.
+
+Validation included a 484-test suite (25 optional checks skipped, zero failures), sustained real-media playback, sequencer FX transfer, preview capture with stereo audio, and a 1080p export. A separate large-chain check covered 1,080 assignments across 128 distinct files. These are tested scenarios, not a guarantee of uninterrupted playback for every codec, drive, or FX load; occasional rendering spikes remain possible.
+
 ### 0.5.1 — October 19, 2026
 
-- **Clip preparation (build 20261019.201106):** the Sequencer now has **Prepare Clips** and an **N/N ready** count beside Bars/Subdivision. Pause and wait for all choices to be ready before playing. Patterns retain up to 64 possible clip choices, including probability pools; only two prepare at once. This fixes repeated eviction/rebuilding in patterns exceeding the old 32-player cache. A file that cannot prepare times out with a reason and waits for an explicit retry instead of repeatedly competing with playback. Hover the readiness count for details; Prepare Clips retries unavailable sources. Masks prepare separately. High-resolution sources, complex FX, and active layer count still affect performance.
+- **Clip preparation (build 20261019.201106):** the Sequencer now has **Prepare Clips** and an **N/N ready** count beside Bars/Subdivision. Pause and wait for all choices to be ready before playing. Patterns retain up to 64 possible clip choices, including probability pools; only two prepare at once. This fixed repeated eviction/rebuilding in patterns exceeding the old 32-player cache. The October 21 build extends this to rolling preparation for larger linked chains. A file that cannot prepare times out with a reason and waits for an explicit retry instead of repeatedly competing with playback. Hover the readiness count for details; Prepare Clips retries unavailable sources. Masks prepare separately. High-resolution sources, complex FX, and active layer count still affect performance.
 
 - **Multi-loop placement (build 20261019.193420):** choose **1–64 loops** beside Place Pattern. Each pass evaluates probability, weighted clip pools and conditional FX independently, then writes fixed, editable clips, masks and FX automation. Chained patterns use the same loop count. Set a step’s Chance to 100% for a guaranteed hit; Wet/Dry controls effect strength.
 
@@ -62,13 +76,13 @@ This release includes changes developed since the public 0.2.0 beta. The macro r
 - **macOS 14 Sonoma or later**, unless an individual release specifies a newer requirement.
 - Your own video and audio files. A MIDI controller is optional.
 
-No Terminal commands, Python, pip, Xcode, TouchDesigner, Max, Ableton, or additional codec package are required. The app includes its resources and uses the media and graphics frameworks supplied with macOS. BlackHole is optional for routing audio from another application into Semiotic's visual reactivity controls; ordinary editing, playback, export, MIDI, and soundtrack reactivity work without it.
+No Terminal commands, Python, pip, Xcode, TouchDesigner, Max, Ableton, additional codec package, or separate VCR-font installation are required. The app includes its resources and uses the media and graphics frameworks supplied with macOS. BlackHole is optional for routing audio from another application into Semiotic's visual reactivity controls; ordinary editing, playback, export, MIDI, and soundtrack reactivity work without it.
 
 ## Install
 
 1. Open **[Releases](https://github.com/sxrvys/Semiotic/releases)** and choose the newest beta. Download the file ending in **`AppleSilicon.dmg`** under Assets. GitHub's automatic “Source code” archives are not the application.
 2. Open the DMG and drag **Semiotic Studio.app** onto **Applications**.
-3. Eject the DMG and open Semiotic Studio from Applications.
+3. Eject the DMG and open Semiotic Studio from Applications. For an update, save your project and quit the old app before replacing it; launch the copy in Applications, not the copy inside the DMG.
 4. If macOS says the developer cannot be verified, first attempt to open the app, then go to **System Settings → Privacy & Security → Open Anyway** and confirm. These beta builds are locally signed but are not yet notarized by Apple. Only approve an installer from this repository or the developer.
 
 If macOS instead reports malware or a damaged application, keep the warning intact and report the exact message. You do not need to disable Gatekeeper or run a quarantine-removal command. See [Apple's instructions for opening an app from an unidentified developer](https://support.apple.com/102445).
@@ -122,7 +136,7 @@ Open **FX → Clip** in the right inspector, then select the video you want to e
 
 Expand **Transform & Crop** for scale, X/Y, rotation, flips, and frame-edge cropping. Position and crop values are normalized to the canvas; crop happens before transform. Transparent areas reveal lower video tracks. These are numeric/slider controls; direct on-preview transform handles are not included in this beta.
 
-Expand **Text** to enter multiline text and choose an installed font, size, color, alignment, position, wrapping width, opacity, black outline, and black background. System Bold is the default. Missing fonts fall back to the system font; fonts are not embedded in project files. Text is attached to its clip or step gate. For a title during only part of a timeline clip, split that section and add text to that fragment. Standalone title tracks and phrase sequencing are not included in this beta.
+Expand **Text** to enter multiline text and choose a font, size, color, alignment, position, wrapping width, opacity, black outline, and black background. A compact font list includes bundled **VCR OSD Mono**; **More Fonts…** opens the installed system-font list when needed. System Bold is the default. Missing fonts fall back to the system font; fonts are not embedded in project files. Text is attached to its clip or step gate. For a title during only part of a timeline clip, split that section and add text to that fragment. Standalone title tracks and phrase sequencing are not included in this beta.
 
 **Send text through clip FX** puts typography into the clip processing chain. Leave it off for text after clip FX; global FX still affect the complete image. Source audition shows framing and text; it does not apply timeline/global FX. All edits are nondestructive.
 
@@ -134,13 +148,13 @@ Open **Pads** and **Macros** to play clips while keeping either the timeline or 
 - Ten pad banks provide space for clips and assignable performance actions.
 - Eight macros can control individual FX parameters or combinations of parameters. Save a rack to reuse a setup.
 - Use the performance **Record** control to write pad performances into the timeline for later editing and quantization.
-- Play two independent live layers. Choose **A** or **B** before triggering a pad, or assign a fixed layer in Pad Settings. Each has its own FX rack, opacity and blend mode. Center on the crossfader keeps both available for blending; either end isolates that layer.
+- Play three independent live layers. Choose **A**, **B**, or **C** before triggering a pad, or assign a fixed layer in Pad Settings. Each has its own FX rack, opacity and blend mode. The crossfader controls A/B; C remains independent. Lanes assigned to the same target replace one another rather than adding another simultaneous layer.
 - Layer **FX** opens its own rack. Global FX process the combined picture. MIDI Map can assign layer parameters, opacity, the crossfader, or scene recall without replacing existing SP-404 mappings.
-- **Scenes** saves named snapshots of clip assignments, both layers, the global rack and macros, and the selected pattern. Recall uses the Launch interval while playing; new pad hits use the recalled assignments. Recorded scene changes replay on the timeline and can be edited in Scenes → Recorded rack changes.
+- **Scenes** saves named snapshots of clip assignments, the live layers, the global rack and macros, and the selected pattern. Recall uses the Launch interval while playing; new pad hits use the recalled assignments. Recorded scene changes replay on the timeline and can be edited in Scenes → Recorded rack changes.
 - **Sequencer** opens the step lanes in the timeline area, keeping the preview visible. Start with two clip rows, a mask row, and an FX row; expand to eight independent rows with 1–64 steps each.
-- **Reorder sequencer lanes:** drag the entire lane header (the “Clips A / Drop a clip here” box) onto another header, or right-click it and choose **Move Up / Move Down**. The row’s clips, steps, masks and FX move together; its assigned layer and playback stay unchanged. Order is saved with the project and supports undo. Audio is arranged in **Timeline** and continues playing with the sequencer. Select a step to edit its **General / FX / Lane** controls in the left sidebar beneath Media and Pads.
+- **Reorder sequencer lanes:** drag the entire lane header (the “Clips A / Drop a clip here” box) onto another header, or right-click it and choose **Move Up / Move Down**. The row’s clips, steps, masks and FX move together; its assigned layer and playback stay unchanged. Order is saved with the project and supports undo. Audio is arranged in **Timeline** and continues playing with the sequencer. Select a step to edit its **General / FX / Pattern** controls in the left sidebar beneath Media and Pads.
 - **Media** and **FX** in the top toolbar collapse independently. **Focus** above the working view hides both; **Restore panels** brings back the previous combination. The divider above the performance controls adjusts preview versus sequencer height.
-- Drag Project Media or a pad onto a lane to choose its source, or onto a step to assign a different clip. Click empty steps to add hits; select a lit step to edit it, then click it again to disable it. The left sidebar holds General, FX, and Lane controls. Weighted clip pools are available under **General → Random clip choices**.
+- Drag Project Media or a pad onto a lane to choose its source, or onto a step to assign a different clip. Click empty steps to add hits; select a lit step to edit it, then click it again to disable it. The left sidebar holds General, FX, and Pattern controls. Weighted clip pools are available under **General → Random clip choices**. Drop clips anywhere in the expanded pool, including on an existing entry, to append choices. A higher Weight makes a choice more likely; Chance determines whether the step triggers at all.
 - Steps support weighted clip pools, probability, gate length, retriggers, frame-aligned microtiming, per-step source starts, first/every-N/previous-result conditions, and Fill. Mask and FX rows can run at different lengths from the clip rows.
 - FX steps can gate an effect or saved chain and lock individual parameters without retriggering the footage. Use **Use for lane** to give new steps the same default FX assignment.
 - Hold **Fill**, or enable **Latch**, for Fill-only steps. **Store → Mutate → Restore** offers a reversible way to try variations. These performance buttons can be assigned through MIDI Map without changing existing controller mappings.
@@ -149,6 +163,16 @@ Open **Pads** and **Macros** to play clips while keeping either the timeline or 
 - Use **MIDI Map** in the top toolbar, click a highlighted software control, then move or press the hardware control you want to assign. Existing assignments are preserved unless explicitly changed. Settings retain the selected controller and saved mappings.
 
 Pad-bank and knob behavior depends on the controller profile and your mappings. Check the on-screen labels when changing macro pages or assigning utility pads.
+
+## Preparing larger arrangements
+
+Create separate patterns for sections such as a verse, chorus, and bridge, then link them using the pattern's **Then** control. Each lane can contain up to 64 steps; independent lane lengths and divisions are supported. Different patterns can use different clips and random pools.
+
+Before performing, pause and choose **Prepare Clips** in the Sequencer toolbar. Click the readiness count for source details and Retry/Replace controls. A small linked chain shows **N/N ready**. A larger chain shows **N/N ready ahead**: only the upcoming window is loaded, while later choices remain **On demand**. This is normal. The eight-second forecast uses the saved random seed and weighted choices without changing the probability decisions.
+
+The project supports up to 4,096 sequencer source slots in addition to the controller pads. This storage allowance is separate from the shared 64-player preparation cache and is not a promise that thousands of sources can play at once. Live playback has three video destinations; masks, timeline playback, and FX/history have additional resource costs. A new hit on a destination cuts the previous clip; different destinations can overlap.
+
+Start at **360p · Light** for complex performances. Preview resolution does not reduce the resolution of an Export Mix render. Keep external source drives connected. Slow drives, difficult codecs, heavy FX, or an abrupt jump to an unprepared pattern can still cause late or missed hits. If a source is unavailable, pause, open readiness details, and retry or replace it rather than repeatedly starting playback.
 
 ## Effects and video synthesis
 
