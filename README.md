@@ -6,11 +6,21 @@ Semiotic Studio is a native Mac application for experimental music videos, glitc
 
 Build precise edits, layer and distort footage, map visual parameters to music or MIDI, and record a pad performance back into an editable timeline. From restrained processing to harsh feedback and rhythmic noise, the emphasis is on making the picture something you can perform.
 
-**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.5.1-beta.20261021.193442)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
+**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.5.1-beta.20261021.221913)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
 
 This repository hosts beta installers, release notes, and user documentation. Application source is maintained separately. Semiotic is under active development; save a copy of important projects before trying a new beta.
 
 ## Changelog
+
+### 0.5.1 beta — October 21, 2026 · build 20261021.221913
+
+- **Select a phrase:** click step 1, then Shift-click step 12 to select all twelve. ⌘-click adds/removes individual steps. Shift-click across lanes selects a rectangle.
+- **Move the whole selection:** drag any selected step to move the group with its spacing, clips, gates, probability pools, appearance and FX locks. For a distant destination, right-click a step and choose **Move selection here**. Overlapping moves preserve their own source steps; incompatible, occupied or out-of-bounds destinations leave the pattern untouched. One Undo restores the whole move. Empty cells with lane-wide gate settings remain valid destinations.
+- **Shared audio work range:** Timeline and Sequencer honor the same enabled In/Out range and Loop setting, including when sequencing continues behind Timeline view. The Sequencer toolbar now exposes those controls. Short loops explicitly reposition the soundtrack instead of waiting for normal drift correction.
+- **Place into the selected section:** Place Pattern starts at the enabled work range’s In point, including an audio-only timeline. Its duration still follows the selected pattern/chain and number of passes; the range does not crop the placed result.
+- **Recording within a range:** recording finishes one pass at Out so captured clips and automation cannot wrap backwards over the take. Ordinary audition loops while Loop is enabled. Without a work range, live performance continues as before.
+
+Validation: 496 regression tests, 25 optional checks skipped, zero failures. This pass covered selection, overlapping group moves, one-action Undo, shared range playback, short audio loops, and recording at Out. The unchanged exhaustive effect-parameter pixel audit was excluded from this pass.
 
 ### 0.5.1 beta — October 21, 2026 · build 20261021.193442
 
@@ -163,6 +173,12 @@ Open **Pads** and **Macros** to play clips while keeping either the timeline or 
 - Use **MIDI Map** in the top toolbar, click a highlighted software control, then move or press the hardware control you want to assign. Existing assignments are preserved unless explicitly changed. Settings retain the selected controller and saved mappings.
 
 Pad-bank and knob behavior depends on the controller profile and your mappings. Check the on-screen labels when changing macro pages or assigning utility pads.
+
+**Selecting and moving steps:** click the first step and Shift-click the last for an inclusive range. ⌘-click toggles individual cells. Drag any selected step to move the group; right-click a destination → **Move selection here** aligns the first selected cell with that destination. Existing hits are protected from accidental replacement. Empty cells can carry lane-wide gate values without blocking a move.
+
+**Build visuals against a section of music:** set and enable the work range in Timeline (In/Out or Loop Selection), enable **Loop**, then switch to Sequencer. Both views use the same audio range. Sequencer also exposes **Loop** and **Work range…** beside the tempo. Stop, then **Place Pattern** to write at the range’s In point. Placement length follows the pattern/chain and chosen loop count. Recording finishes at Out rather than overwriting its own take on subsequent audio loops.
+
+**Timeline and patterns are independent arrangements:** switching views does not convert timeline cuts into steps. Sequencer clips temporarily replace timeline footage on their destination video track while playing. Place Pattern creates editable timeline clips and FX automation; later timeline edits do not rewrite the original pattern.
 
 ## Preparing larger arrangements
 
