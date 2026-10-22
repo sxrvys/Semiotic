@@ -6,11 +6,11 @@ Semiotic Studio is a native Mac application for experimental music videos, glitc
 
 Build precise edits, layer and distort footage, map visual parameters to music or MIDI, and record a pad performance back into an editable timeline. From restrained processing to harsh feedback and rhythmic noise, the emphasis is on making the picture something you can perform.
 
-**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.6.1-beta.20261022.185833)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
+**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.7.0-beta.20261022.195342)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
 
 This repository hosts beta installers, release notes, and user documentation. Application source is maintained separately. Semiotic is under active development; save a copy of important projects before trying a new beta.
 
-**New here?** [Install](#install) → [Make your first video](#start-here-your-first-video) → [Learn the workspace](#unified-workspace). [Shortcuts](#default-shortcuts) · [Troubleshooting](#if-something-seems-wrong) · [What changed in 0.6.1](#changelog)
+**New here?** [Install](#install) → [Make your first video](#start-here-your-first-video) → [Learn the workspace](#unified-workspace). [Shortcuts](#default-shortcuts) · [Troubleshooting](#if-something-seems-wrong) · [What changed in 0.7.0](#changelog)
 
 ## Requirements
 
@@ -322,7 +322,42 @@ In the sequencer, use an FX step and its gate to interrupt all footage for a cho
 
 The new effects do not add automatic decay or frozen tails. Draw a wet/dry envelope for a fade-out, or deliberately combine them with existing delay/freeze tools. Video FX never process your soundtrack.
 
+## Physical and analog interruptions
+
+Add these from **FX → Add**, or load **Racks → Physical Violence** / **Analog Breakdown**. Racks start dry and preserve MIDI mappings; loading one replaces the eight macro assignments and is undoable.
+
+| Effect | What to expect |
+| --- | --- |
+| Frame Breaker | Tiles from a captured frame bank, running forward, backward or frozen |
+| Impact / Aftershock | Zoom, displacement, inversion and diminishing jolts |
+| Contour Shredder | Jagged tears following image boundaries |
+| Motion Corruption | Displaced blocks and smears in moving regions |
+| Signal Dropout | Missing scan bands and held, damaged fragments |
+| Temporal Collision | Difference/subtraction against an earlier frame |
+| Sync Strike | Tears and rolling picture that recover into alignment |
+| Dirty Mixer | Unstable competition with an earlier image or underlying layer |
+| Chroma Unlock | Crawling color bands, displaced chroma and color loss |
+| Feedback Slam | A sudden injection into an expanding, rotating feedback return |
+| Key Chatter | Unstable brightness switching with hysteresis |
+| Tape Snatch | Picture yank, skew and a travelling damaged strip |
+
+Each has five mappable controls and three presets. All process video only. Motion Corruption approximates compression damage; it does not use optical flow or corrupt your media files.
+
+**Trigger & recovery**, beneath Wet / dry in the FX and sequencer FX inspectors, adds a shared **Burst** option. A rise from zero fires attack, hold and decay, in beats or seconds, with 1–8 hits and seeded hit-strength variation. Releasing the pad lets the burst finish. Return the gate to zero to rearm it; consecutive sequencer gates without a zero gap are one trigger. Record the gates to reproduce the same envelope on the timeline and in export. Clear Tails cancels active bursts.
+
+Choose **Follow gate / latch** for normal wet/dry control: Gate pads hold an effect; Toggle pads latch it. Trigger configuration belongs to the effect instance, so steps sharing it share the envelope. Duplicate an instance for another shape. Processor parameters still support step locks and music-note mappings. The new racks preconfigure their impact/recovery effects as bursts.
+
+Temporal effects capture a bounded history after activation, so the very first short hit has less past footage available. Returning to dry releases that history. Multiple temporal effects at high resolution still use more resources; use the light preview while performing and Render in Place for finished heavy passages.
+
 ## Changelog
+
+### 0.7.0 beta — October 22, 2026 · build 20261022.195342 · Physical & Analog Interruptions
+
+- Twelve new effects, 60 mappable controls and 36 presets; two playable eight-macro racks.
+- Shared Burst envelopes with attack/hold/decay, retriggers, beat or second timing, seeded hit variation, sequencer access and recorded playback.
+- Bounded history with release cleanup; video-only processing.
+- Project format 25; earlier projects still open, but older app versions cannot open new saves.
+
 
 ### 0.6.1 beta — October 22, 2026 · build 20261022.185833 · Signal Interruptions
 
