@@ -10,109 +10,7 @@ Build precise edits, layer and distort footage, map visual parameters to music o
 
 This repository hosts beta installers, release notes, and user documentation. Application source is maintained separately. Semiotic is under active development; save a copy of important projects before trying a new beta.
 
-## Changelog
-
-### 0.6.0 beta — October 21, 2026 · build 20261022.012123
-
-- **Song arranger:** open Song in the Sequencer toolbar, drag named patterns into the strip, set each section's repeat count, and reorder the cards. The strip shows relative musical/time positions, the current pass and the next section. Enable Play song arrangement to follow it; Loop song repeats it. Place Song commits one complete arrangement, including resolved probability choices, masks and FX.
-- **Reusable lane pools:** click a lane header to build a weighted clip pool. Enabled steps can inherit it, so you can build a pattern before choosing individual clips. Existing per-step pools remain available.
-- **Randomness with memory:** choose weighted random, no immediate repeat, use all before reshuffling, or contrast every N passes. Chance/condition misses do not consume the choice history. Lane-pool steps share memory; each explicit step pool has its own. Memory resets when a pattern section starts or transport restarts.
-- **Populate and Shuffle:** in the lane inspector, open Populate / shuffle steps. Choose density, gate and chance, optionally distribute hits evenly with Euclidean rotation, then Populate steps. Shuffle clips changes source assignments on existing hits while retaining their other settings.
-- **Selective mutation:** the control beside Mutate chooses clip choices, gates, timing/retriggers, probability and existing FX locks. Set an amount and protect any steps you want preserved. Populate, Shuffle and Mutate support Undo and Store/Restore.
-- **Swing and movement:** pattern swing, lane swing overrides and four-part groove offsets shape timing. Select a range of steps and use General → Swing / traversal overrides for a local swing, reverse-order or ping-pong section. Outside that section, lane defaults resume. Traversal changes step order; source-video reverse remains separate.
-- **Step explanations:** small outcome marks distinguish triggered hits, probability/condition misses and unavailable/expired hits. Select a step for its last-visit explanation and inherited/local settings.
-- **Preparation stays bounded:** forecasting copies the same scheduling state used by playback, including choice memory, without consuming live choices. The shared 64-player cache and two-worker preparation queue remain in place.
-
-#### Timing and compatibility
-
-Ping-pong adds return visits and lengthens the cycle; it does not squeeze those visits into the original bar. The first clip lane defines the master pattern duration. Other lanes run independently until the next section boundary. Gate bars are hidden for reordered traversal because a straight grid span would be misleading. Very short rhythmic changes remain limited by video frame rate.
-
-Place Song writes one finite arrangement regardless of Loop song. An enabled work range determines its start; otherwise existing timeline placement rules apply. Large placements are checked before allocation. Live Fill changes can alter future source choices and may require a source that was not forecast.
-
-Projects now save format **23**. Earlier projects open; keep a copy if returning to an older app, which cannot open the new format. macOS 14+, Apple Silicon, bundled fonts and the normal drag-to-Applications installation remain unchanged. All FX remain video-only.
-
-Validation: 538 regression tests, 28 optional checks skipped, zero failures; the unchanged exhaustive effect-parameter audit was excluded. A final focused run covered 44 tests with 3 optional skips and no failures. Live checks covered song video playback and automatic stopping, timeline placement, lane controls, Populate, protected steps and Undo. Project-format artifacts match the native schema.
-
-### 0.5.2 beta — October 21, 2026 · build 20261022.000934
-
-- **Reverse export fix:** some valid MP4 files cannot decode their nominal zero-time frame. A narrowly bounded retry uses the first readable source frame at the reverse endpoint, without seeking outside the clip's trim. The previously failing 138-second project now completes with video and audio.
-- **Render in Place:** select video clips, then choose **Timeline → Render in Place…** (also in the timeline's Edit menu). Speed/reverse, framing/text, clip FX and automation are baked into ProRes 4444 movies. Each clip retains its duration and position. Opacity, blend, split screen, track masks, global FX and all audio stay live. Music-reactive clip processing is frozen against the current song.
-- **Restore originals:** use **Timeline → Restore Unrendered Originals**, or Undo. Original media and edit settings are preserved in the project; restoring resets trim/speed/FX to the pre-render edit at the current position and track. Save the project before rendering. Keep the generated **Renders** folder beside it when moving/backing up the project. These movies use disk space and are not automatically deleted on Undo.
-- **Render boundaries:** no extra delay tails are added. Clip masks, underlay-dependent Key/Logic Mixers, macro-driven opacity, and incomplete selections of a shared feedback performance are refused with an explanation; use Export Mix for these combinations. Render in Place reuses clip processing on later playback/exports, but global FX still require rendering.
-- **Clearer export failures:** errors identify the failed stage and underlying codes. Soundtrack inputs are held stable during the render. If audio finishing fails after the video completes, a video-only recovery file is retained and can be revealed from **Export details…**.
-- **Create Pattern from Timeline Selection:** copy selected video clips or the enabled work range into a new independent pattern. Choose subdivision, preview lane/step counts, and optionally set the shared work range. Source marks, rate/reverse, clip FX/automation, opacity, masks and framing travel with the copied clips. Audio and the original timeline stay in place. Up to three routed video layers and 64 steps; unsupported overlaps or timing are explained before any changes.
-- Projects now save format **22**, including persistent original-clip snapshots. Earlier project versions still open. Bundled VCR OSD Mono and normal installation requirements are unchanged.
-
-
-Validation: 522 regression tests, 27 optional checks skipped, zero failures. The unchanged exhaustive effect-parameter audit was excluded. A previously failing 138-second project completed with audio; final frames and both tracks were verified. Native Render in Place, playback, save, Restore Originals and Undo checks passed. Timeline-to-pattern conversion was also verified in the app.
-
-### 0.5.1 beta — October 21, 2026 · build 20261021.221913
-
-- **Select a phrase:** click step 1, then Shift-click step 12 to select all twelve. ⌘-click adds/removes individual steps. Shift-click across lanes selects a rectangle.
-- **Move the whole selection:** drag any selected step to move the group with its spacing, clips, gates, probability pools, appearance and FX locks. For a distant destination, right-click a step and choose **Move selection here**. Overlapping moves preserve their own source steps; incompatible, occupied or out-of-bounds destinations leave the pattern untouched. One Undo restores the whole move. Empty cells with lane-wide gate settings remain valid destinations.
-- **Shared audio work range:** Timeline and Sequencer honor the same enabled In/Out range and Loop setting, including when sequencing continues behind Timeline view. The Sequencer toolbar now exposes those controls. Short loops explicitly reposition the soundtrack instead of waiting for normal drift correction.
-- **Place into the selected section:** Place Pattern starts at the enabled work range’s In point, including an audio-only timeline. Its duration still follows the selected pattern/chain and number of passes; the range does not crop the placed result.
-- **Recording within a range:** recording finishes one pass at Out so captured clips and automation cannot wrap backwards over the take. Ordinary audition loops while Loop is enabled. Without a work range, live performance continues as before.
-
-Validation: 496 regression tests, 25 optional checks skipped, zero failures. This pass covered selection, overlapping group moves, one-action Undo, shared range playback, short audio loops, and recording at Out. The unchanged exhaustive effect-parameter pixel audit was excluded from this pass.
-
-### 0.5.1 beta — October 21, 2026 · build 20261021.193442
-
-- **Larger verse/chorus/bridge arrangements:** linked patterns share an advance-loading cache. Small chains keep all choices prepared; larger chains forecast weighted clip choices up to eight seconds ahead and rotate them through at most 64 prepared players, with two preparation jobs at a time. **64 is a cache limit, not a project-wide clip limit.** Pause and use **Prepare Clips**, then wait for the current window to read **N/N ready ahead**. The readiness panel explains which sources are ready, queued, on demand, or unavailable.
-- **Three live video layers:** A, B, and C have independent opacity, blending, FX, masks, and timeline recording. New clip lanes choose an unused target. The A/B crossfader leaves C independent; lanes targeting the same layer replace each other's clips.
-- **Faster editing and preparation:** background clip-readiness changes no longer redraw the entire editor during sequencing. Color palette processing runs on the GPU instead of rebuilding a 32³ lookup table while controls move. Preview/status updates stay isolated from the larger workspace.
-- **Random pools:** drop one or more media clips anywhere inside the expanded pool, including over existing entries, to add choices. The whole drop area highlights. Existing entries and their weights are retained.
-- **Group editing:** timeline masks support Shift-click and rectangle selection, moving, duplicate, copy/paste, batch settings, and Undo. Sequencer steps support batch edits, full-step copy/paste, and dragging steps between compatible lanes.
-- **Step control:** lane/step speed and reverse stay independent of gate length. Step FX expose audio/beat mapping and random parameter ranges; placed performances preserve their resolved choices and mappings.
-- **Media workflow:** thumbnails show usage, can filter unused sources, and help locate timeline/sequencer uses. Source controls expose marked ranges, crop/scale, and text. Audio drops retain the pointer's timeline position; the first pattern placed on an empty visual timeline begins at zero. Track headers remain accessible during horizontal scrolling.
-- **Clearer readiness:** the footer reports sequence readiness in Sequencer view instead of the unrelated controller-pad bank count. Failed sources retain their explanation and wait for Retry; preparation warnings refer to the current pattern chain.
-- **Compatibility:** projects saved by this build use project format 20. Older project formats remain readable; keep a backup before opening/saving in a newer beta. VCR OSD Mono is bundled; no separate font or developer-tool installation is needed.
-
-Validation included a 484-test suite (25 optional checks skipped, zero failures), sustained real-media playback, sequencer FX transfer, preview capture with stereo audio, and a 1080p export. A separate large-chain check covered 1,080 assignments across 128 distinct files. These are tested scenarios, not a guarantee of uninterrupted playback for every codec, drive, or FX load; occasional rendering spikes remain possible.
-
-### 0.5.1 — October 19, 2026
-
-- **Clip preparation (build 20261019.201106):** the Sequencer now has **Prepare Clips** and an **N/N ready** count beside Bars/Subdivision. Pause and wait for all choices to be ready before playing. Patterns retain up to 64 possible clip choices, including probability pools; only two prepare at once. This fixed repeated eviction/rebuilding in patterns exceeding the old 32-player cache. The October 21 build extends this to rolling preparation for larger linked chains. A file that cannot prepare times out with a reason and waits for an explicit retry instead of repeatedly competing with playback. Hover the readiness count for details; Prepare Clips retries unavailable sources. Masks prepare separately. High-resolution sources, complex FX, and active layer count still affect performance.
-
-- **Multi-loop placement (build 20261019.193420):** choose **1–64 loops** beside Place Pattern. Each pass evaluates probability, weighted clip pools and conditional FX independently, then writes fixed, editable clips, masks and FX automation. Chained patterns use the same loop count. Set a step’s Chance to 100% for a guaranteed hit; Wet/Dry controls effect strength.
-
-- **Playback hotfix (build 20261019.185837):** active sequencer clips prepare while paused and stay ahead of unrelated pads in the bounded decoder cache. Fixes repeated preparation/skipped hits in larger sets without increasing the memory limit.
-
-- Mask lanes and mask steps now have opacity controls. 100% applies the full matte; 0% leaves the target unmasked. Lane and step amounts multiply and persist through recording, placement, and export. Timeline mask clips expose the same control. The step inspector’s Timing tab is now **General**, with opacity/blend at the top.
-
-- Click a sequencer **lane card** for lane-wide mute, routing, opacity/blend and **Apply to all** gate length. Click a step for its own controls: **General → Step opacity / Step blend**. Step opacity multiplies lane/layer opacity; step blends inherit unless explicitly overridden. Lane mix changes take effect on the next clip trigger and are preserved by Record, Place Pattern and export.
-- Fixed Gate numeric entry showing a stale value after Return or clicking away. **Apply** buttons also commit a number that is still being typed, without requiring Return first. Native inspector tests check the displayed value as well as the stored value.
-
-- Numeric fields allow normal clearing/replacement, negative and decimal entry, selection and clipboard editing. Return or clicking away applies the value once; Escape cancels, and incomplete/invalid entries restore the previous value. This covers sequencer Gate/layout duration, FX, grading, crop/transform, tempo, trims, masks and automation coordinates.
-- While typing, ⌘Z / ⇧⌘Z use the text editor’s undo/redo history instead of changing the project. Trim panels with an **Apply** button still use that button to apply the prepared trim.
-- Clip text uses a compact nine-font chooser, including bundled **VCR OSD Mono**. **More Fonts…** loads installed fonts only when opened; custom fonts already saved in projects remain selectable. Selecting clips no longer builds the entire system-font catalog in the inspector.
-- Source audition avoids rebuilding an unchanged video composition and publishing unchanged playback state.
-
-- Sequencer length is now **Bars × Subdivision** in the main toolbar, with the resulting step count displayed. All lanes is the default; choose Selected lane for independent lengths. Two bars at 1/16 is 32 steps; eighth-note triplets give 12 steps per bar. Each lane supports up to 64 steps. New steps default to a one-step gate; existing patterns keep their gates.
-- Temporary split-screen commands: select a clip-lane step → **General → Screen Layout…** to open the Clip inspector. Enable Timed screen layout, choose Top/Bottom/Left/Right/corners, and set its duration in steps independently of the clip gate. For a six-step split, set Clips A to Top and Clips B to Bottom for six steps. Commands survive intervening clip changes, restore the previous layout when finished, and are retained in Record/Place Pattern and export.
-- Step inspector labeling and retrigger guidance make Gate, Hits and their frame-rate limits clearer. Project format 18 stores timed layout commands; older projects still open.
-
-- Drop Finder folders into Project Media to import their audio/video into same-named project folders. Subfolder media is included in the root folder’s bin, non-media files are skipped, existing source trims are preserved, and one Undo removes the whole import. Source files stay in their original locations.
-
-- Enter now works in the Sequencer as it does in the Timeline: press once to stop, then again to return the song and sequencer clock to zero and scroll the view to the beginning. Space toggles playback in either view; typing in parameter fields keeps normal keyboard behavior.
-
-- Selecting a sequencer step’s **FX** tab opens **Effects → Selected step** in the full inspector. The effect’s parameter sliders and numeric fields write step locks automatically; blue lock buttons clear individual overrides. Gate/timing and the existing Lock parameter / Use for lane controls remain in the left step panel. Shared rack values and neighboring steps stay unchanged.
-- Sequencer Gate length spans 0.05–64 steps, with numeric entry and common lengths. Long clips sustain across empty/missed steps; new hits take over without old tails reappearing in placed patterns.
-- Switching from a playing timeline to Sequencer starts the pattern at the current song position while keeping soundtrack playback continuous. Patterns repeat while the song progresses; Record captures repeated passes, and Stop leaves the playhead at the end of the take for the next section.
-
-- **Settings → Audio → Playback output** selects any audio output exposed by macOS, independently of the live input. The app remembers the device, refreshes on connection changes, and mutes playback if a chosen device disconnects until it returns or another output is chosen. System Default follows macOS. Export and capture audio are unchanged.
-
-### 0.5.0 beta — October 19, 2026
-
-- Unified Timeline / Sequencer workspace with independent Media, Pads, FX, Macros, and Automation visibility. Common project, export, and capture actions live in File; source/canvas setup lives in Settings.
-- Sequencer lanes in the main working area, with step controls in the left sidebar. Drag lane headers to reorder; layer routing and playback order stay intact. Pattern creation/duplication, chaining, Fill, Store/Mutate/Restore, probability, weighted clip choices, retriggers, and parameter locks support repeatable performances.
-- Contextual **Clip inspector** for timeline clips, media-source defaults, pads, and clip-lane steps. Add scale, position, rotation, flips, transparent edge cropping, and multiline text with installed fonts, color, alignment, wrapping, opacity, outline, and background.
-- Source defaults are copied into new placements. Individual clip/pad/step changes remain independent; sequencer capture and Place Pattern retain their appearance. Text can be placed before or after clip FX; global FX always process the composite.
-- Weighted clip choices now live in a collapsed **General → Random clip choices** section, leaving General, FX, and Lane as the main step tabs.
-- Welcome-screen focus cleanup, visual-only undo for framing/text, and cached text rendering at preview/export resolution.
-- Project format 16 preserves the new appearance fields. Existing projects open; projects saved in this version require an updated app. Keep a copy if returning to an older beta.
-
-This release includes changes developed since the public 0.2.0 beta. The macro rack remains collapsible with **Macros**; its sizing behavior is unchanged.
+**New here?** [Install](#install) → [Make your first video](#start-here-your-first-video) → [Learn the workspace](#unified-workspace). [Shortcuts](#default-shortcuts) · [Troubleshooting](#if-something-seems-wrong) · [What changed in 0.6.0](#changelog)
 
 ## Requirements
 
@@ -143,16 +41,105 @@ Save your project, quit Semiotic, then open the DMG and replace the older copy i
 
 Update checks and installation are **manual and optional**. No GitHub account, signup, or background update service is required. The updater sends no project or media data. GitHub receives the ordinary network request needed to check or download a release.
 
-## First session
+## Start here: your first video
 
-1. Choose **New Project** on the welcome screen or in the File menu.
-2. Use **File → Import Media…** or drag video and music from Finder into **Project Media**. The bin's **+** button opens your configured source library in Finder.
-3. Drag footage onto a video track and music onto an audio track. Selecting a bin thumbnail while transport is stopped lets you preview that source in the main player.
-4. Press **Space** to play or pause. Drag the playhead to scrub; use the arrow keys for frame-accurate positioning.
-5. Open **Effects**, add an effect, and raise its Mix or Amount. New projects start with a clean image. **Color** provides a separate neutral grading panel.
-6. Save the project with **⌘S**. Use **File → Export Mix… (⇧⌘E)** for a finished movie.
+You only need a mouse/trackpad, **two or three video clips**, and optionally a song. Start small and add complexity once you can see and hear your first sequence. No MIDI controller is required.
 
-Project files use readable **`.semiotic.json`**. Source media stays in its original location, so keep those files available when reopening or moving a project.
+### 1. Make a project and bring in media
+
+1. Choose **New Project** on the welcome screen or **File → New Project**. Save it with **⌘S**.
+2. Show **Media** in the top toolbar. Drag video files and your song from Finder into **Project Media**, or use **File → Import Media… (⌘I)**. You can also drag a Finder folder into the bin to keep that collection together.
+3. The bin is your collection of sources; importing alone does not place them in the video. Click a thumbnail while stopped to audition it. **Program** returns the viewer to the project output.
+4. The bin's **+** opens your configured library folder in a normal Finder window. Use the folder button to organize items inside the project.
+
+A project is a readable **`.semiotic.json`** file containing your edits and settings. It references the original media; it does not pack those movies and songs inside itself. Keep source files available, and send the referenced media along with a project when collaborating. Save a copy before trying a new beta.
+
+### 2. Put your song on the timeline
+
+1. Choose **Timeline** in the working-view switch beneath the preview.
+2. Drag the song onto **A1**, the first audio track. If you want it to begin at zero, place it against the left edge of the timeline.
+3. Press **Space** to play/pause. **Enter** stops; press Enter twice to return to the beginning. Keyboard shortcuts leave text fields alone while you are typing.
+4. In **Settings → Audio → Playback output**, select your headphones, speakers or audio interface. **Effects follow → Timeline audio** is the default visual-reactivity source.
+5. Set the project **BPM** to your song's tempo for beat-based editing. Tempo is shared by the timeline and sequencer; set it deliberately rather than assuming importing a song establishes its BPM.
+
+Audio stays on the timeline when you switch to Sequencer. Video FX never process the sound. Audio has its own trim, move, level and stretch controls.
+
+### 3. Choose how to make the picture
+
+| Start with… | Use it for… | First action |
+| --- | --- | --- |
+| **Timeline** | Arranging specific shots at specific times | Drag video onto V1 |
+| **Sequencer** | Rhythmic cuts, repeating phrases and controlled randomness | Drag video onto a step |
+| **Pads** | Playing clips by hand or MIDI | Drag video onto a pad |
+
+These are connected parts of one project. You can perform or sequence ideas, place them on the timeline, then refine the resulting cuts by hand.
+
+**A straightforward timeline edit:** drag two clips onto V1. Normal drops append to the end of that track; Option-drop places at the pointer. Move clips to arrange them, drag an edge to trim, and use **⌘B** to split selected clips at the playhead. Select a clip to access speed/reverse and **FX → Clip** for transform, crop and text. The track **+** adds more tracks.
+
+**A first sequencer pattern:**
+
+1. Switch to **Sequencer**. Keep **1 bar × 1/16** for sixteen steps in 4/4. Keep **Chance at 100%** while learning.
+2. Drag one video onto **Clips A, step 1**. Select that step and set **General → Gate length** to **8**; press Enter to commit numeric edits.
+3. Drag another video onto **step 9**, then set its gate to **8** too. This makes two sustained shots across the bar. The next successful hit on the same destination takes over from the previous one.
+4. Press **Prepare Clips** while paused and wait for the readiness count. Press the main **Play** button or Space. The pattern loops while the timeline song advances.
+5. Click a **step** for its controls in the lower-left inspector. Click the **lane header**—the box labeled Clips A—for defaults that apply across that lane. Step overrides can differ from those defaults.
+6. For a longer phrase, change **Bars** in the sequencer toolbar: **2 bars × 1/16 = 32 steps**. Choose **All lanes** to resize them together. The current maximum is 64 steps per lane.
+
+**Gate** is duration, measured in steps; it is not a count of repeats. A default gate of 1 only sustains for one step, so placing a single hit on step 1 can leave the rest of the bar black. **Hits** retriggers within a step. **Chance** decides whether the hit happens. For three repeats within a step, try Hits 3×; use a triplet subdivision for a triplet grid. Very short hits are limited by video frame rate.
+
+To add overlapping footage, put clips on **Clips B** with its target set to **Layer B**. A/B/C are three independent live video destinations. Lanes aimed at the same destination replace each other's clips. Use lane/step opacity and blend settings, or **General → Screen Layout…** on a clip step for timed split-screen layouts.
+
+### 4. Make it react, then make it unpredictable
+
+**Add an effect:** show **FX**, select the **Effects** tab and choose **Global** to process the combined picture. Use **+ Add**, choose an effect and raise its Mix/Amount as needed. Start with one effect so you can hear the music and see exactly what that control changes. New projects start dry; bypassed effects or Mix at zero do not change the image.
+
+**Let the music drive it:** in **Settings → Audio**, choose **Effects follow → Timeline audio** and enable audio reactivity. Click the **music-note button** beside an FX parameter, choose Bass, Mids, Highs or Level, then set its Low/High response range. Play the song. Adjust **Sensitivity** and **Release** in Audio settings if the motion is too weak or too jumpy. A live input such as BlackHole is optional; your imported song is enough.
+
+**Give a step its own effect:** select the step and its **FX** tab to open the full-sized step FX inspector. Its parameter changes become locks for that hit. An **FX lane** can schedule effect gates without changing the footage. Keep Chance at 100% initially and check the target rack is enabled. Global, layer, clip and step targets have different scopes—check the inspector heading before turning a control.
+
+**Try a random pool:**
+
+1. Click **Clips A's lane header**, find **Lane Clip Pool**, and drop several clips into it.
+2. Choose **Use all before reshuffling** to cycle through the choices in changing order, or **No immediate repeat** to avoid the previous choice when alternatives exist.
+3. Open **Populate / shuffle steps**. Try Density 50%, Gate 2, Chance 100%, and **Choose from pool on every visit**. Click **Populate steps**. This replaces unprotected hits, so use a spare pattern or Undo while experimenting.
+4. Play it, then reduce Chance to introduce missed hits. A missed hit does not consume the pool's choice history. An existing clip can continue through a miss until its gate ends.
+
+**Weight** changes how likely a clip is relative to other choices; **Chance** changes whether the step fires at all. A step's own **Random clip choices** pool is independent of the shared lane pool. **Shuffle clips** changes assignments on existing hits without moving their timing. **Store** saves a pattern checkpoint, **Mutate** creates a variation, and **Restore** returns to the checkpoint. The control beside Mutate selects allowed categories and amount; protect steps you want kept.
+
+For a locally off-kilter phrase, click one step and Shift-click another to select the range. Use **General → Swing / traversal overrides**. The rest of the lane keeps its defaults. Reverse traversal reverses the order of steps, not the movie inside each step. Ping-pong adds return visits, so it lengthens the cycle.
+
+### 5. Arrange sections and keep a result you love
+
+Use **+ beside the pattern selector → New pattern** or **Duplicate pattern** for another section. The selector lets you return to edit earlier patterns. Open **Song**, drag named patterns into the arrangement, and set their pass counts—for example Verse ×4 → Chorus ×2. Enable **Play song arrangement** to follow those cards. **Loop song** repeats the arrangement; otherwise it stops at the end. The first clip lane defines each pattern's master duration.
+
+To work on only part of the music, set and enable a **Work range**, enable **Loop**, then use the sequencer against that section. Both views honor the same audio range. With a range enabled, placement starts at its In point.
+
+| To keep… | Use… |
+| --- | --- |
+| A generated pattern over several passes | Stop, choose the pass count, then **Place Pattern** |
+| One full song arrangement with its section repeats | Stop, then **Place Song** |
+| The particular choices and live actions you perform | Performance **Record**, then stop to place the take |
+| A movie of the processed preview | **File → Capture Preview…** |
+| A finished timeline movie at delivery resolution | **File → Export Mix…** |
+
+Place Pattern/Song resolves randomness into editable clips, masks and FX automation. Record preserves the actual performance. Later timeline playback/export does not reroll those choices. Switching views alone does not transfer a sequence to the timeline; place or record it first for a timeline export. Subsequent timeline edits and pattern edits are independent. If a take cannot be placed, read the message and use **Take → Place pending take** after resolving the issue, such as a locked target track.
+
+Before exporting, switch to **Timeline**, return to the beginning and play the result. Check the soundtrack, picture, work range and end point. Open **File → Export Mix…**, choose a destination and format—H.264 MP4 is a convenient first delivery—and include timeline audio if wanted. A range enabled for export limits the portion rendered. Export resolution is independent of preview quality; Capture Preview uses the preview quality instead.
+
+## If something seems wrong
+
+| What you see | First things to check |
+| --- | --- |
+| A source previews, but the sequence is black | Is a hit enabled and assigned? Is its lane visible and its destination opacity above zero? Try Chance 100%, a longer Gate, and Prepare Clips. Source audition is separate from project playback. |
+| Black between hits | Gate may end before the next hit. Increase it or add hits; a probability miss is intentional silence in the sequence unless a previous gate is still sustaining. |
+| The music is silent | Check the audio clip's position, track mute/level, Settings → Audio → Playback output, and the interface/headphone volume. |
+| FX do nothing | Check Global/layer/clip/step target, rack/effect bypass, Mix/Amount, and whether that step is currently active. |
+| Audio mapping does nothing | Check Effects follow → Timeline audio, Enable audio reactivity, that audio is playing, the selected band and Low/High range. |
+| A click edits the wrong thing | Lane headers select lane defaults; step cells select local controls; the right inspector heading identifies the FX target. |
+| Clips are preparing or playback skips | Pause, choose Prepare Clips, and inspect readiness details. “Ready ahead” means the upcoming window is prepared; it does not mean every project source is resident. Use 360p · Light and keep media drives connected. |
+| Your exported result differs from the sequence | Confirm you placed or recorded it onto the timeline. With probability below 100%, a fresh Place Pattern can make different decisions from a live performance; Record keeps what you actually played. |
+
+**⌘Z** is your friend. Save versions as you experiment, and report confusing behavior as well as outright bugs. Start with the short recipe above before stacking many layers, long feedback histories and large random pools.
 
 ## Unified workspace
 
@@ -216,7 +203,7 @@ Pad-bank and knob behavior depends on the controller profile and your mappings. 
 
 ## Preparing larger arrangements
 
-Create separate patterns for sections such as a verse, chorus, and bridge, then link them using the pattern's **Then** control. Each lane can contain up to 64 steps; independent lane lengths and divisions are supported. Different patterns can use different clips and random pools.
+Create separate patterns for sections such as a verse, chorus, and bridge, then arrange them in **Song**. The older pattern **Then** control remains available when Play song arrangement is off. Each lane can contain up to 64 steps; independent lane lengths and divisions are supported. Different patterns can use different clips and random pools.
 
 Before performing, pause and choose **Prepare Clips** in the Sequencer toolbar. Click the readiness count for source details and Retry/Replace controls. A small linked chain shows **N/N ready**. A larger chain shows **N/N ready ahead**: only the upcoming window is loaded, while later choices remain **On demand**. This is normal. The eight-second forecast uses the saved random seed and weighted choices without changing the probability decisions.
 
@@ -320,3 +307,107 @@ Found a problem or an awkward workflow? [Open an issue](https://github.com/sxrvy
 - A screenshot or a short sample you have permission to share, if helpful.
 
 Issues here are public. Avoid posting client footage, private project paths, or other confidential material. Small reproducible examples are especially useful during the beta.
+
+## Changelog
+
+### 0.6.0 beta — October 21, 2026 · build 20261022.012123
+
+- **Song arranger:** open Song in the Sequencer toolbar, drag named patterns into the strip, set each section's repeat count, and reorder the cards. The strip shows relative musical/time positions, the current pass and the next section. Enable Play song arrangement to follow it; Loop song repeats it. Place Song commits one complete arrangement, including resolved probability choices, masks and FX.
+- **Reusable lane pools:** click a lane header to build a weighted clip pool. Enabled steps can inherit it, so you can build a pattern before choosing individual clips. Existing per-step pools remain available.
+- **Randomness with memory:** choose weighted random, no immediate repeat, use all before reshuffling, or contrast every N passes. Chance/condition misses do not consume the choice history. Lane-pool steps share memory; each explicit step pool has its own. Memory resets when a pattern section starts or transport restarts.
+- **Populate and Shuffle:** in the lane inspector, open Populate / shuffle steps. Choose density, gate and chance, optionally distribute hits evenly with Euclidean rotation, then Populate steps. Shuffle clips changes source assignments on existing hits while retaining their other settings.
+- **Selective mutation:** the control beside Mutate chooses clip choices, gates, timing/retriggers, probability and existing FX locks. Set an amount and protect any steps you want preserved. Populate, Shuffle and Mutate support Undo and Store/Restore.
+- **Swing and movement:** pattern swing, lane swing overrides and four-part groove offsets shape timing. Select a range of steps and use General → Swing / traversal overrides for a local swing, reverse-order or ping-pong section. Outside that section, lane defaults resume. Traversal changes step order; source-video reverse remains separate.
+- **Step explanations:** small outcome marks distinguish triggered hits, probability/condition misses and unavailable/expired hits. Select a step for its last-visit explanation and inherited/local settings.
+- **Preparation stays bounded:** forecasting copies the same scheduling state used by playback, including choice memory, without consuming live choices. The shared 64-player cache and two-worker preparation queue remain in place.
+
+#### Timing and compatibility
+
+Ping-pong adds return visits and lengthens the cycle; it does not squeeze those visits into the original bar. The first clip lane defines the master pattern duration. Other lanes run independently until the next section boundary. Gate bars are hidden for reordered traversal because a straight grid span would be misleading. Very short rhythmic changes remain limited by video frame rate.
+
+Place Song writes one finite arrangement regardless of Loop song. An enabled work range determines its start; otherwise existing timeline placement rules apply. Large placements are checked before allocation. Live Fill changes can alter future source choices and may require a source that was not forecast.
+
+Projects now save format **23**. Earlier projects open; keep a copy if returning to an older app, which cannot open the new format. macOS 14+, Apple Silicon, bundled fonts and the normal drag-to-Applications installation remain unchanged. All FX remain video-only.
+
+Validation: 538 regression tests, 28 optional checks skipped, zero failures; the unchanged exhaustive effect-parameter audit was excluded. A final focused run covered 44 tests with 3 optional skips and no failures. Live checks covered song video playback and automatic stopping, timeline placement, lane controls, Populate, protected steps and Undo. Project-format artifacts match the native schema.
+
+### 0.5.2 beta — October 21, 2026 · build 20261022.000934
+
+- **Reverse export fix:** some valid MP4 files cannot decode their nominal zero-time frame. A narrowly bounded retry uses the first readable source frame at the reverse endpoint, without seeking outside the clip's trim. The previously failing 138-second project now completes with video and audio.
+- **Render in Place:** select video clips, then choose **Timeline → Render in Place…** (also in the timeline's Edit menu). Speed/reverse, framing/text, clip FX and automation are baked into ProRes 4444 movies. Each clip retains its duration and position. Opacity, blend, split screen, track masks, global FX and all audio stay live. Music-reactive clip processing is frozen against the current song.
+- **Restore originals:** use **Timeline → Restore Unrendered Originals**, or Undo. Original media and edit settings are preserved in the project; restoring resets trim/speed/FX to the pre-render edit at the current position and track. Save the project before rendering. Keep the generated **Renders** folder beside it when moving/backing up the project. These movies use disk space and are not automatically deleted on Undo.
+- **Render boundaries:** no extra delay tails are added. Clip masks, underlay-dependent Key/Logic Mixers, macro-driven opacity, and incomplete selections of a shared feedback performance are refused with an explanation; use Export Mix for these combinations. Render in Place reuses clip processing on later playback/exports, but global FX still require rendering.
+- **Clearer export failures:** errors identify the failed stage and underlying codes. Soundtrack inputs are held stable during the render. If audio finishing fails after the video completes, a video-only recovery file is retained and can be revealed from **Export details…**.
+- **Create Pattern from Timeline Selection:** copy selected video clips or the enabled work range into a new independent pattern. Choose subdivision, preview lane/step counts, and optionally set the shared work range. Source marks, rate/reverse, clip FX/automation, opacity, masks and framing travel with the copied clips. Audio and the original timeline stay in place. Up to three routed video layers and 64 steps; unsupported overlaps or timing are explained before any changes.
+- Projects now save format **22**, including persistent original-clip snapshots. Earlier project versions still open. Bundled VCR OSD Mono and normal installation requirements are unchanged.
+
+
+Validation: 522 regression tests, 27 optional checks skipped, zero failures. The unchanged exhaustive effect-parameter audit was excluded. A previously failing 138-second project completed with audio; final frames and both tracks were verified. Native Render in Place, playback, save, Restore Originals and Undo checks passed. Timeline-to-pattern conversion was also verified in the app.
+
+### 0.5.1 beta — October 21, 2026 · build 20261021.221913
+
+- **Select a phrase:** click step 1, then Shift-click step 12 to select all twelve. ⌘-click adds/removes individual steps. Shift-click across lanes selects a rectangle.
+- **Move the whole selection:** drag any selected step to move the group with its spacing, clips, gates, probability pools, appearance and FX locks. For a distant destination, right-click a step and choose **Move selection here**. Overlapping moves preserve their own source steps; incompatible, occupied or out-of-bounds destinations leave the pattern untouched. One Undo restores the whole move. Empty cells with lane-wide gate settings remain valid destinations.
+- **Shared audio work range:** Timeline and Sequencer honor the same enabled In/Out range and Loop setting, including when sequencing continues behind Timeline view. The Sequencer toolbar now exposes those controls. Short loops explicitly reposition the soundtrack instead of waiting for normal drift correction.
+- **Place into the selected section:** Place Pattern starts at the enabled work range’s In point, including an audio-only timeline. Its duration still follows the selected pattern/chain and number of passes; the range does not crop the placed result.
+- **Recording within a range:** recording finishes one pass at Out so captured clips and automation cannot wrap backwards over the take. Ordinary audition loops while Loop is enabled. Without a work range, live performance continues as before.
+
+Validation: 496 regression tests, 25 optional checks skipped, zero failures. This pass covered selection, overlapping group moves, one-action Undo, shared range playback, short audio loops, and recording at Out. The unchanged exhaustive effect-parameter pixel audit was excluded from this pass.
+
+### 0.5.1 beta — October 21, 2026 · build 20261021.193442
+
+- **Larger verse/chorus/bridge arrangements:** linked patterns share an advance-loading cache. Small chains keep all choices prepared; larger chains forecast weighted clip choices up to eight seconds ahead and rotate them through at most 64 prepared players, with two preparation jobs at a time. **64 is a cache limit, not a project-wide clip limit.** Pause and use **Prepare Clips**, then wait for the current window to read **N/N ready ahead**. The readiness panel explains which sources are ready, queued, on demand, or unavailable.
+- **Three live video layers:** A, B, and C have independent opacity, blending, FX, masks, and timeline recording. New clip lanes choose an unused target. The A/B crossfader leaves C independent; lanes targeting the same layer replace each other's clips.
+- **Faster editing and preparation:** background clip-readiness changes no longer redraw the entire editor during sequencing. Color palette processing runs on the GPU instead of rebuilding a 32³ lookup table while controls move. Preview/status updates stay isolated from the larger workspace.
+- **Random pools:** drop one or more media clips anywhere inside the expanded pool, including over existing entries, to add choices. The whole drop area highlights. Existing entries and their weights are retained.
+- **Group editing:** timeline masks support Shift-click and rectangle selection, moving, duplicate, copy/paste, batch settings, and Undo. Sequencer steps support batch edits, full-step copy/paste, and dragging steps between compatible lanes.
+- **Step control:** lane/step speed and reverse stay independent of gate length. Step FX expose audio/beat mapping and random parameter ranges; placed performances preserve their resolved choices and mappings.
+- **Media workflow:** thumbnails show usage, can filter unused sources, and help locate timeline/sequencer uses. Source controls expose marked ranges, crop/scale, and text. Audio drops retain the pointer's timeline position; the first pattern placed on an empty visual timeline begins at zero. Track headers remain accessible during horizontal scrolling.
+- **Clearer readiness:** the footer reports sequence readiness in Sequencer view instead of the unrelated controller-pad bank count. Failed sources retain their explanation and wait for Retry; preparation warnings refer to the current pattern chain.
+- **Compatibility:** projects saved by this build use project format 20. Older project formats remain readable; keep a backup before opening/saving in a newer beta. VCR OSD Mono is bundled; no separate font or developer-tool installation is needed.
+
+Validation included a 484-test suite (25 optional checks skipped, zero failures), sustained real-media playback, sequencer FX transfer, preview capture with stereo audio, and a 1080p export. A separate large-chain check covered 1,080 assignments across 128 distinct files. These are tested scenarios, not a guarantee of uninterrupted playback for every codec, drive, or FX load; occasional rendering spikes remain possible.
+
+### 0.5.1 — October 19, 2026
+
+- **Clip preparation (build 20261019.201106):** the Sequencer now has **Prepare Clips** and an **N/N ready** count beside Bars/Subdivision. Pause and wait for all choices to be ready before playing. Patterns retain up to 64 possible clip choices, including probability pools; only two prepare at once. This fixed repeated eviction/rebuilding in patterns exceeding the old 32-player cache. The October 21 build extends this to rolling preparation for larger linked chains. A file that cannot prepare times out with a reason and waits for an explicit retry instead of repeatedly competing with playback. Hover the readiness count for details; Prepare Clips retries unavailable sources. Masks prepare separately. High-resolution sources, complex FX, and active layer count still affect performance.
+
+- **Multi-loop placement (build 20261019.193420):** choose **1–64 loops** beside Place Pattern. Each pass evaluates probability, weighted clip pools and conditional FX independently, then writes fixed, editable clips, masks and FX automation. Chained patterns use the same loop count. Set a step’s Chance to 100% for a guaranteed hit; Wet/Dry controls effect strength.
+
+- **Playback hotfix (build 20261019.185837):** active sequencer clips prepare while paused and stay ahead of unrelated pads in the bounded decoder cache. Fixes repeated preparation/skipped hits in larger sets without increasing the memory limit.
+
+- Mask lanes and mask steps now have opacity controls. 100% applies the full matte; 0% leaves the target unmasked. Lane and step amounts multiply and persist through recording, placement, and export. Timeline mask clips expose the same control. The step inspector’s Timing tab is now **General**, with opacity/blend at the top.
+
+- Click a sequencer **lane card** for lane-wide mute, routing, opacity/blend and **Apply to all** gate length. Click a step for its own controls: **General → Step opacity / Step blend**. Step opacity multiplies lane/layer opacity; step blends inherit unless explicitly overridden. Lane mix changes take effect on the next clip trigger and are preserved by Record, Place Pattern and export.
+- Fixed Gate numeric entry showing a stale value after Return or clicking away. **Apply** buttons also commit a number that is still being typed, without requiring Return first. Native inspector tests check the displayed value as well as the stored value.
+
+- Numeric fields allow normal clearing/replacement, negative and decimal entry, selection and clipboard editing. Return or clicking away applies the value once; Escape cancels, and incomplete/invalid entries restore the previous value. This covers sequencer Gate/layout duration, FX, grading, crop/transform, tempo, trims, masks and automation coordinates.
+- While typing, ⌘Z / ⇧⌘Z use the text editor’s undo/redo history instead of changing the project. Trim panels with an **Apply** button still use that button to apply the prepared trim.
+- Clip text uses a compact nine-font chooser, including bundled **VCR OSD Mono**. **More Fonts…** loads installed fonts only when opened; custom fonts already saved in projects remain selectable. Selecting clips no longer builds the entire system-font catalog in the inspector.
+- Source audition avoids rebuilding an unchanged video composition and publishing unchanged playback state.
+
+- Sequencer length is now **Bars × Subdivision** in the main toolbar, with the resulting step count displayed. All lanes is the default; choose Selected lane for independent lengths. Two bars at 1/16 is 32 steps; eighth-note triplets give 12 steps per bar. Each lane supports up to 64 steps. New steps default to a one-step gate; existing patterns keep their gates.
+- Temporary split-screen commands: select a clip-lane step → **General → Screen Layout…** to open the Clip inspector. Enable Timed screen layout, choose Top/Bottom/Left/Right/corners, and set its duration in steps independently of the clip gate. For a six-step split, set Clips A to Top and Clips B to Bottom for six steps. Commands survive intervening clip changes, restore the previous layout when finished, and are retained in Record/Place Pattern and export.
+- Step inspector labeling and retrigger guidance make Gate, Hits and their frame-rate limits clearer. Project format 18 stores timed layout commands; older projects still open.
+
+- Drop Finder folders into Project Media to import their audio/video into same-named project folders. Subfolder media is included in the root folder’s bin, non-media files are skipped, existing source trims are preserved, and one Undo removes the whole import. Source files stay in their original locations.
+
+- Enter now works in the Sequencer as it does in the Timeline: press once to stop, then again to return the song and sequencer clock to zero and scroll the view to the beginning. Space toggles playback in either view; typing in parameter fields keeps normal keyboard behavior.
+
+- Selecting a sequencer step’s **FX** tab opens **Effects → Selected step** in the full inspector. The effect’s parameter sliders and numeric fields write step locks automatically; blue lock buttons clear individual overrides. Gate/timing and the existing Lock parameter / Use for lane controls remain in the left step panel. Shared rack values and neighboring steps stay unchanged.
+- Sequencer Gate length spans 0.05–64 steps, with numeric entry and common lengths. Long clips sustain across empty/missed steps; new hits take over without old tails reappearing in placed patterns.
+- Switching from a playing timeline to Sequencer starts the pattern at the current song position while keeping soundtrack playback continuous. Patterns repeat while the song progresses; Record captures repeated passes, and Stop leaves the playhead at the end of the take for the next section.
+
+- **Settings → Audio → Playback output** selects any audio output exposed by macOS, independently of the live input. The app remembers the device, refreshes on connection changes, and mutes playback if a chosen device disconnects until it returns or another output is chosen. System Default follows macOS. Export and capture audio are unchanged.
+
+### 0.5.0 beta — October 19, 2026
+
+- Unified Timeline / Sequencer workspace with independent Media, Pads, FX, Macros, and Automation visibility. Common project, export, and capture actions live in File; source/canvas setup lives in Settings.
+- Sequencer lanes in the main working area, with step controls in the left sidebar. Drag lane headers to reorder; layer routing and playback order stay intact. Pattern creation/duplication, chaining, Fill, Store/Mutate/Restore, probability, weighted clip choices, retriggers, and parameter locks support repeatable performances.
+- Contextual **Clip inspector** for timeline clips, media-source defaults, pads, and clip-lane steps. Add scale, position, rotation, flips, transparent edge cropping, and multiline text with installed fonts, color, alignment, wrapping, opacity, outline, and background.
+- Source defaults are copied into new placements. Individual clip/pad/step changes remain independent; sequencer capture and Place Pattern retain their appearance. Text can be placed before or after clip FX; global FX always process the composite.
+- Weighted clip choices now live in a collapsed **General → Random clip choices** section, leaving General, FX, and Lane as the main step tabs.
+- Welcome-screen focus cleanup, visual-only undo for framing/text, and cached text rendering at preview/export resolution.
+- Project format 16 preserves the new appearance fields. Existing projects open; projects saved in this version require an updated app. Keep a copy if returning to an older beta.
+
+This release includes changes developed since the public 0.2.0 beta. The macro rack remains collapsible with **Macros**; its sizing behavior is unchanged.
