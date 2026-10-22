@@ -6,11 +6,32 @@ Semiotic Studio is a native Mac application for experimental music videos, glitc
 
 Build precise edits, layer and distort footage, map visual parameters to music or MIDI, and record a pad performance back into an editable timeline. From restrained processing to harsh feedback and rhythmic noise, the emphasis is on making the picture something you can perform.
 
-**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.5.2-beta.20261022.000934)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
+**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.6.0-beta.20261022.012123)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
 
 This repository hosts beta installers, release notes, and user documentation. Application source is maintained separately. Semiotic is under active development; save a copy of important projects before trying a new beta.
 
 ## Changelog
+
+### 0.6.0 beta — October 21, 2026 · build 20261022.012123
+
+- **Song arranger:** open Song in the Sequencer toolbar, drag named patterns into the strip, set each section's repeat count, and reorder the cards. The strip shows relative musical/time positions, the current pass and the next section. Enable Play song arrangement to follow it; Loop song repeats it. Place Song commits one complete arrangement, including resolved probability choices, masks and FX.
+- **Reusable lane pools:** click a lane header to build a weighted clip pool. Enabled steps can inherit it, so you can build a pattern before choosing individual clips. Existing per-step pools remain available.
+- **Randomness with memory:** choose weighted random, no immediate repeat, use all before reshuffling, or contrast every N passes. Chance/condition misses do not consume the choice history. Lane-pool steps share memory; each explicit step pool has its own. Memory resets when a pattern section starts or transport restarts.
+- **Populate and Shuffle:** in the lane inspector, open Populate / shuffle steps. Choose density, gate and chance, optionally distribute hits evenly with Euclidean rotation, then Populate steps. Shuffle clips changes source assignments on existing hits while retaining their other settings.
+- **Selective mutation:** the control beside Mutate chooses clip choices, gates, timing/retriggers, probability and existing FX locks. Set an amount and protect any steps you want preserved. Populate, Shuffle and Mutate support Undo and Store/Restore.
+- **Swing and movement:** pattern swing, lane swing overrides and four-part groove offsets shape timing. Select a range of steps and use General → Swing / traversal overrides for a local swing, reverse-order or ping-pong section. Outside that section, lane defaults resume. Traversal changes step order; source-video reverse remains separate.
+- **Step explanations:** small outcome marks distinguish triggered hits, probability/condition misses and unavailable/expired hits. Select a step for its last-visit explanation and inherited/local settings.
+- **Preparation stays bounded:** forecasting copies the same scheduling state used by playback, including choice memory, without consuming live choices. The shared 64-player cache and two-worker preparation queue remain in place.
+
+#### Timing and compatibility
+
+Ping-pong adds return visits and lengthens the cycle; it does not squeeze those visits into the original bar. The first clip lane defines the master pattern duration. Other lanes run independently until the next section boundary. Gate bars are hidden for reordered traversal because a straight grid span would be misleading. Very short rhythmic changes remain limited by video frame rate.
+
+Place Song writes one finite arrangement regardless of Loop song. An enabled work range determines its start; otherwise existing timeline placement rules apply. Large placements are checked before allocation. Live Fill changes can alter future source choices and may require a source that was not forecast.
+
+Projects now save format **23**. Earlier projects open; keep a copy if returning to an older app, which cannot open the new format. macOS 14+, Apple Silicon, bundled fonts and the normal drag-to-Applications installation remain unchanged. All FX remain video-only.
+
+Validation: 538 regression tests, 28 optional checks skipped, zero failures; the unchanged exhaustive effect-parameter audit was excluded. A final focused run covered 44 tests with 3 optional skips and no failures. Live checks covered song video playback and automatic stopping, timeline placement, lane controls, Populate, protected steps and Undo. Project-format artifacts match the native schema.
 
 ### 0.5.2 beta — October 21, 2026 · build 20261022.000934
 
