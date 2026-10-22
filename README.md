@@ -6,7 +6,7 @@ Semiotic Studio is a native Mac application for experimental music videos, glitc
 
 Build precise edits, layer and distort footage, map visual parameters to music or MIDI, and record a pad performance back into an editable timeline. From restrained processing to harsh feedback and rhythmic noise, the emphasis is on making the picture something you can perform.
 
-**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.6.0-beta.20261022.012123)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
+**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.6.0-beta.20261022.175944)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
 
 This repository hosts beta installers, release notes, and user documentation. Application source is maintained separately. Semiotic is under active development; save a copy of important projects before trying a new beta.
 
@@ -104,7 +104,7 @@ To add overlapping footage, put clips on **Clips B** with its target set to **La
 3. Open **Populate / shuffle steps**. Try Density 50%, Gate 2, Chance 100%, and **Choose from pool on every visit**. Click **Populate steps**. This replaces unprotected hits, so use a spare pattern or Undo while experimenting.
 4. Play it, then reduce Chance to introduce missed hits. A missed hit does not consume the pool's choice history. An existing clip can continue through a miss until its gate ends.
 
-**Weight** changes how likely a clip is relative to other choices; **Chance** changes whether the step fires at all. A step's own **Random clip choices** pool is independent of the shared lane pool. **Shuffle clips** changes assignments on existing hits without moving their timing. **Store** saves a pattern checkpoint, **Mutate** creates a variation, and **Restore** returns to the checkpoint. The control beside Mutate selects allowed categories and amount; protect steps you want kept.
+**Weight** displays as a relative percentage: 100% is normal, 50% is half as likely and 200% is twice as likely. Equal weights share selections equally; these are not absolute probabilities. Weight changes how likely a clip is relative to other choices; **Chance** changes whether the step fires at all. A step's own **Random clip choices** pool is independent of the shared lane pool. **Shuffle clips** changes assignments on existing hits without moving their timing. **Store** saves a pattern checkpoint, **Mutate** creates a variation, and **Restore** returns to the checkpoint. The control beside Mutate selects allowed categories and amount; protect steps you want kept.
 
 For a locally off-kilter phrase, click one step and Shift-click another to select the range. Use **General → Swing / traversal overrides**. The rest of the lane keeps its defaults. Reverse traversal reverses the order of steps, not the movie inside each step. Ping-pong adds return visits, so it lengthens the cycle.
 
@@ -309,6 +309,14 @@ Found a problem or an awkward workflow? [Open an issue](https://github.com/sxrvy
 Issues here are public. Avoid posting client footage, private project paths, or other confidential material. Small reproducible examples are especially useful during the beta.
 
 ## Changelog
+
+### 0.6.0 beta — October 22, 2026 · build 20261022.175944
+
+- Clip-pool weights now display as percentages with a visible Weight label: 100% is normal, 50% is half as likely, and 200% is twice as likely. Both lane and per-step pools use the clearer display. Existing selection behavior and saved weights are unchanged.
+- Added a ground-zero beginner walkthrough, troubleshooting table and quick navigation above the reference guide.
+
+Validation: release build and package checks passed; a native UI edit confirmed that typing 50 and pressing Enter displays 50% and saves the existing 0.5 weight correctly.
+
 
 ### 0.6.0 beta — October 21, 2026 · build 20261022.012123
 
