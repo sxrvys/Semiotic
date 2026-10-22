@@ -6,11 +6,11 @@ Semiotic Studio is a native Mac application for experimental music videos, glitc
 
 Build precise edits, layer and distort footage, map visual parameters to music or MIDI, and record a pad performance back into an editable timeline. From restrained processing to harsh feedback and rhythmic noise, the emphasis is on making the picture something you can perform.
 
-**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.6.0-beta.20261022.175944)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
+**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.6.1-beta.20261022.185833)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
 
 This repository hosts beta installers, release notes, and user documentation. Application source is maintained separately. Semiotic is under active development; save a copy of important projects before trying a new beta.
 
-**New here?** [Install](#install) → [Make your first video](#start-here-your-first-video) → [Learn the workspace](#unified-workspace). [Shortcuts](#default-shortcuts) · [Troubleshooting](#if-something-seems-wrong) · [What changed in 0.6.0](#changelog)
+**New here?** [Install](#install) → [Make your first video](#start-here-your-first-video) → [Learn the workspace](#unified-workspace). [Shortcuts](#default-shortcuts) · [Troubleshooting](#if-something-seems-wrong) · [What changed in 0.6.1](#changelog)
 
 ## Requirements
 
@@ -308,7 +308,31 @@ Found a problem or an awkward workflow? [Open an issue](https://github.com/sxrvy
 
 Issues here are public. Avoid posting client footage, private project paths, or other confidential material. Small reproducible examples are especially useful during the beta.
 
+## Playing the new interruption effects
+
+Open **FX → Add → Signal damage** to find **Signal Emergence**, **Halftone / Print Damage**, and **Pixel Sorting**. Each has three factory presets. Raise **Wet / dry** to engage it; zero returns to the incoming picture immediately.
+
+For a ready-to-play set, open **Racks → Signal Interruptions**. Its eight macros start dry. With the SP-404 profile, hold an assigned FX macro pad and turn CTRL 3 to adjust that macro; release the momentary pad to restore its previous value. Toggle pads deliberately remain engaged until pressed again.
+
+In the sequencer, use an FX step and its gate to interrupt all footage for a chosen duration, or put FX on an individual clip step. Open that step’s FX inspector to set parameter locks. Click a parameter’s music note to map it to bass, mids, highs, level or beat modulation.
+
+- **Signal Emergence:** sweep Signal reveal to make forms appear in static; use Density to starve the image and Scatter to tear it apart. Beat sync holds a random pattern for each division. Free rate zero freezes the random pattern while footage keeps moving.
+- **Halftone:** start with Bootleg photocopy, then play Screen size and Ink spread. Choose Color screens to enable misregistration. Paper damage and New chaos pattern produce repeatable broken print.
+- **Pixel Sorting:** play Sorted cell width and the brightness limits. Horizontal/Vertical and Reverse change the direction; Sort by chooses brightness or a color channel. Out-of-range cells remain in place. Block scatter can change on the beat. Width is rounded to physical pixels at the current render resolution.
+
+The new effects do not add automatic decay or frozen tails. Draw a wet/dry envelope for a fade-out, or deliberately combine them with existing delay/freeze tools. Video FX never process your soundtrack.
+
 ## Changelog
+
+### 0.6.1 beta — October 22, 2026 · build 20261022.185833 · Signal Interruptions
+
+- **Signal Emergence:** make footage emerge from particles and static. Play reveal, density, particle size, contours, threshold and scatter, with source color and background controls. Static can change on the beat or at a free rate.
+- **Halftone / Print Damage:** dot, line and color-screen patterns, with screen size/angle, contrast, ink spread, color misregistration, paper damage and inverted print.
+- **Pixel Sorting:** sort groups of 16 image cells by brightness or RGB channel, horizontally or vertically. Select a brightness range, reverse the order and scatter sorting blocks on the beat. Cell width controls streak length; this is a bounded block sort, not an unlimited whole-row sort.
+- **Signal Interruptions factory rack:** eight named macros, starting dry, with the three new effects plus Sync Bend, Wavefolder, RGB Split, Tremolo and Stutter. Existing controller mappings stay connected. Loading a factory rack replaces its macro assignments/effect instances and can be undone.
+- All new controls support the existing MIDI/macros, music mappings, automation, saved presets/chains and sequencer locks. The three new effects have immediate wet/dry release and no temporal frame-history buffers. Their random patterns use saved seeds for repeatable playback/export. Audio remains untouched.
+- Projects now save as format 24; earlier projects still open. Update Semiotic before opening a project saved by this release.
+
 
 ### 0.6.0 beta — October 22, 2026 · build 20261022.175944
 
