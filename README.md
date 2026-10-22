@@ -6,11 +6,24 @@ Semiotic Studio is a native Mac application for experimental music videos, glitc
 
 Build precise edits, layer and distort footage, map visual parameters to music or MIDI, and record a pad performance back into an editable timeline. From restrained processing to harsh feedback and rhythmic noise, the emphasis is on making the picture something you can perform.
 
-**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.5.1-beta.20261021.221913)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
+**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.5.2-beta.20261022.000934)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
 
 This repository hosts beta installers, release notes, and user documentation. Application source is maintained separately. Semiotic is under active development; save a copy of important projects before trying a new beta.
 
 ## Changelog
+
+### 0.5.2 beta — October 21, 2026 · build 20261022.000934
+
+- **Reverse export fix:** some valid MP4 files cannot decode their nominal zero-time frame. A narrowly bounded retry uses the first readable source frame at the reverse endpoint, without seeking outside the clip's trim. The previously failing 138-second project now completes with video and audio.
+- **Render in Place:** select video clips, then choose **Timeline → Render in Place…** (also in the timeline's Edit menu). Speed/reverse, framing/text, clip FX and automation are baked into ProRes 4444 movies. Each clip retains its duration and position. Opacity, blend, split screen, track masks, global FX and all audio stay live. Music-reactive clip processing is frozen against the current song.
+- **Restore originals:** use **Timeline → Restore Unrendered Originals**, or Undo. Original media and edit settings are preserved in the project; restoring resets trim/speed/FX to the pre-render edit at the current position and track. Save the project before rendering. Keep the generated **Renders** folder beside it when moving/backing up the project. These movies use disk space and are not automatically deleted on Undo.
+- **Render boundaries:** no extra delay tails are added. Clip masks, underlay-dependent Key/Logic Mixers, macro-driven opacity, and incomplete selections of a shared feedback performance are refused with an explanation; use Export Mix for these combinations. Render in Place reuses clip processing on later playback/exports, but global FX still require rendering.
+- **Clearer export failures:** errors identify the failed stage and underlying codes. Soundtrack inputs are held stable during the render. If audio finishing fails after the video completes, a video-only recovery file is retained and can be revealed from **Export details…**.
+- **Create Pattern from Timeline Selection:** copy selected video clips or the enabled work range into a new independent pattern. Choose subdivision, preview lane/step counts, and optionally set the shared work range. Source marks, rate/reverse, clip FX/automation, opacity, masks and framing travel with the copied clips. Audio and the original timeline stay in place. Up to three routed video layers and 64 steps; unsupported overlaps or timing are explained before any changes.
+- Projects now save format **22**, including persistent original-clip snapshots. Earlier project versions still open. Bundled VCR OSD Mono and normal installation requirements are unchanged.
+
+
+Validation: 522 regression tests, 27 optional checks skipped, zero failures. The unchanged exhaustive effect-parameter audit was excluded. A previously failing 138-second project completed with audio; final frames and both tracks were verified. Native Render in Place, playback, save, Restore Originals and Undo checks passed. Timeline-to-pattern conversion was also verified in the app.
 
 ### 0.5.1 beta — October 21, 2026 · build 20261021.221913
 
