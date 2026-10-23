@@ -2,7 +2,7 @@
 
 **The project has a new name and a new official home: [sxrvys/Abjext](https://github.com/sxrvys/Abjext).**
 
-Same software, same development, new identity. We’re adopting **ABJEXT Studio** as the lasting name for the project. Thank you to everyone helping shape it through the beta.
+Same software, same development, new identity. We’re adopting **ABJEXT Studio** as the lasting name for the project. Thank you to everyone helping shape it through the beta. Unfortunately someone else beat us to the Semiotic name and since they picked it first it was only right for us to come up with a new name to avoid any conflict or confusion.
 
 ## One final update here
 
