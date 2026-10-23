@@ -6,11 +6,11 @@ Semiotic Studio is a native Mac application for experimental music videos, glitc
 
 Build precise edits, layer and distort footage, map visual parameters to music or MIDI, and record a pad performance back into an editable timeline. From restrained processing to harsh feedback and rhythmic noise, the emphasis is on making the picture something you can perform.
 
-**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.7.0-beta.20261022.195342)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
+**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.7.1-beta.20261023.012813)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
 
 This repository hosts beta installers, release notes, and user documentation. Application source is maintained separately. Semiotic is under active development; save a copy of important projects before trying a new beta.
 
-**New here?** [Install](#install) → [Make your first video](#start-here-your-first-video) → [Learn the workspace](#unified-workspace). [Shortcuts](#default-shortcuts) · [Troubleshooting](#if-something-seems-wrong) · [What changed in 0.7.0](#changelog)
+**New here?** [Install](#install) → [Make your first video](#start-here-your-first-video) → [Learn the workspace](#unified-workspace). [Shortcuts](#default-shortcuts) · [Troubleshooting](#if-something-seems-wrong) · [What changed in 0.7.1](#changelog)
 
 ## Requirements
 
@@ -199,6 +199,10 @@ Pad-bank and knob behavior depends on the controller profile and your mappings. 
 
 **Build visuals against a section of music:** set and enable the work range in Timeline (In/Out or Loop Selection), enable **Loop**, then switch to Sequencer. Both views use the same audio range. Sequencer also exposes **Loop** and **Work range…** beside the tempo. Stop, then **Place Pattern** to write at the range’s In point. Placement length follows the pattern/chain and chosen loop count. Recording finishes at Out rather than overwriting its own take on subsequent audio loops.
 
+**Reuse a precise timeline excerpt:** select a trimmed video clip and click **To Pool…** in the timeline toolbar (also **Timeline → Send Timeline Selection to Sequencer Pool…**). To extract just part of it, enable **Work range**, mark In/Out, and choose **Selected clips within work range**. Choose a pattern and clip/mask lane, then **Add to Pool**. This opens that lane's inspector; use its pool and Populate steps to build a sequence. Multiple selections become separate pool choices. The same file can contribute several different excerpts, each labeled with source times. Existing steps and weights stay intact; identical excerpts are not added twice.
+
+The transfer keeps source marks, speed, reverse and framing without making another media file. A longer gate loops within the excerpt. Lane/step playback overrides still take precedence. Audio, timeline FX, opacity and blending stay on the timeline; use Create Pattern for an arrangement conversion or Render in Place when you want clip processing baked into the source. One Undo removes a transfer. Maximum 160 choices per lane pool and 4096 sequencer sources per project still apply.
+
 **Timeline and patterns are independent arrangements:** switching views does not convert timeline cuts into steps. Sequencer clips temporarily replace timeline footage on their destination video track while playing. Place Pattern creates editable timeline clips and FX automation; later timeline edits do not rewrite the original pattern.
 
 ## Preparing larger arrangements
@@ -350,6 +354,16 @@ Choose **Follow gate / latch** for normal wet/dry control: Gate pads hold an eff
 Temporal effects capture a bounded history after activation, so the very first short hit has less past footage available. Returning to dry releases that history. Multiple temporal effects at high resolution still use more resources; use the light preview while performing and Render in Place for finished heavy passages.
 
 ## Changelog
+
+### 0.7.1 beta — October 22, 2026 · build 20261023.012813 · Timeline excerpts and tighter quantization
+
+- Video clip boxes span their full duration without an artificial two-pixel gap. Video beat lines match the frame boundaries used by snapping and quantization; audio beat lines retain exact musical timing.
+
+- Fixed cumulative frame-rounding drift when quantizing consecutive timeline clips. Each cut now stays anchored to the musical grid. Starts-only quantization no longer skips a beat because a preceding edge rounded up. Cuts use the editor's 30 fps frame grid; set the song's BPM and beat offset, then use Quantize Video to update existing edits.
+
+- **To Pool…** sends selected timeline clips or work-range excerpts into a chosen pattern's lane pool.
+- Retains exact source marks, playback speed, reverse and framing. Separate excerpts from one file remain independent; repeated additions preserve existing weights.
+- Transfer is undoable and leaves timeline clips, audio, controller mappings and programmed steps intact. Invalid ranges or full pools are explained before any changes.
 
 ### 0.7.0 beta — October 22, 2026 · build 20261022.195342 · Physical & Analog Interruptions
 
