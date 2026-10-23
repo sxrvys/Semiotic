@@ -6,11 +6,11 @@ Semiotic Studio is a native Mac application for experimental music videos, glitc
 
 Build precise edits, layer and distort footage, map visual parameters to music or MIDI, and record a pad performance back into an editable timeline. From restrained processing to harsh feedback and rhythmic noise, the emphasis is on making the picture something you can perform.
 
-**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.8.0-beta.20261023.022845)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
+**[Download the latest beta](https://github.com/sxrvys/Semiotic/releases/tag/v0.8.1-beta.20261023.152235)** · **[Report an issue](https://github.com/sxrvys/Semiotic/issues)**
 
 This repository hosts beta installers, release notes, and user documentation. Application source is maintained separately. Semiotic is under active development; save a copy of important projects before trying a new beta.
 
-**New here?** [Install](#install) → [Make your first video](#start-here-your-first-video) → [Learn the workspace](#unified-workspace). [Shortcuts](#default-shortcuts) · [Troubleshooting](#if-something-seems-wrong) · [What changed in 0.8.0](#changelog)
+**New here?** [Install](#install) → [Make your first video](#start-here-your-first-video) → [Learn the workspace](#unified-workspace). [Shortcuts](#default-shortcuts) · [Troubleshooting](#if-something-seems-wrong) · [What changed in 0.8.1](#changelog)
 
 ## Requirements
 
@@ -370,7 +370,26 @@ Choose **Follow gate / latch** for normal wet/dry control: Gate pads hold an eff
 
 Temporal effects capture a bounded history after activation, so the very first short hit has less past footage available. Returning to dry releases that history. Multiple temporal effects at high resolution still use more resources; use the light preview while performing and Render in Place for finished heavy passages.
 
+### Dot Matrix and Contour Scan
+
+Open **FX → Add → Video synthesis**:
+
+- **Dot Matrix** rebuilds the picture as dense illuminated dots against black. Start with **Ember matrix** for red/orange silhouettes. Play **Dot columns**, **Dot size**, **Dither texture**, and **Black cutoff**. Luma deflection bends the grid; Signal breakup tears holes in it.
+- **Contour Scan** draws glowing lines that bend around source brightness. Start with **Ember contours**, then play **Luma deflection**, **Carrier lines**, **Line width**, and **Signal breakup**.
+
+Each includes three presets, adjustable phosphor hue and highlight heat, glow, and signed drift. **Screen drift = 0** holds the screen still. Map **Screen phase** to Beat sine, or map deflection/breakup to bass or another audio band using the music-note button. Use 720p preview to inspect fine marks: very dense screens are limited to resolvable cells at the current render resolution.
+
+For immediate pad/knob use, load **Racks → Phosphor Screens**. Dot Matrix and Contour Scan occupy macro slots 1 and 2, followed by Sync Bend, Signal Emergence, Wavefolder, RGB Split / Delay, Tremolo / Gate, and Video Delay. The rack starts dry; raise a macro or hold its mapped FX pad to engage it. Loading a rack changes the macro assignments; Undo restores the prior rack. Existing MIDI bindings are preserved. Both new effects also work as clip or step FX, with parameter locks, saved presets, automation and audio reactivity. Video effects do not process audio.
+
 ## Changelog
+
+### 0.8.1 beta — October 23, 2026 · build 20261023.152235 · Phosphor Screens
+
+- Added **Dot Matrix**, with luminous dot grids, crushed silhouettes, dithering, luma deflection and seeded breakup.
+- Added **Contour Scan**, with luminous brightness-bent carrier lines, adjustable line width, drift, color and glow.
+- Six factory presets and a **Phosphor Screens** playable rack; all new controls support the existing MIDI, macro, sequencer, automation and audio-modulation workflows.
+- Both processors are stateless GPU effects: no frame-history buffers, CPU color-table rebuilds or audio processing.
+
 
 ### 0.8.0 beta — October 22, 2026 · build 20261023.022845 · Playable song sections
 
